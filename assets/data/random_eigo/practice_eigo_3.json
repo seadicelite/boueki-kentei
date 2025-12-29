@@ -1,0 +1,21 @@
+{
+  "image": "assets/images/q1.png",
+  "questions": [
+    {
+      "sentence": "この書類は何？",
+      "A": "B/L",
+      "B": "Invoice",
+      "C": "Packing List",
+      "answer": "A",
+      "explanation": "B/L = 船荷証券"
+    },
+    {
+      "sentence": "この書類の役割は？",
+      "A": "受領証",
+      "B": "保険証書",
+      "C": "税関書類",
+      "answer": "A",
+      "explanation": "B/L は受領証として機能"
+    }
+  ]
+}

@@ -1,0 +1,39 @@
+{
+  "questions": [
+    {
+      "sentence": "貨物に Fragile とあった場合の意味はどちらか？",
+      "optionA": "天地無用",
+      "optionB": "こわれもの注意",
+      "answer": "B",
+      "explanation": "Fragile は「こわれもの注意」。"
+    },
+    {
+      "sentence": "Documents against Acceptance（D/A手形）の意味はどちらか？",
+      "optionA": "手形引受書類渡し",
+      "optionB": "手形支払書類渡し",
+      "answer": "A",
+      "explanation": "D/Aは手形引受書類渡しのこと。"
+    },
+    {
+      "sentence": "税関が審査・認定した通関業者を何という？",
+      "optionA": "特定通関業者",
+      "optionB": "認定通関業者",
+      "answer": "B",
+      "explanation": "適正業者として税関が認定したものを認定通関業者という。"
+    },
+    {
+      "sentence": "最恵国待遇はどちらを意味する？",
+      "optionA": "他国より有利に扱う",
+      "optionB": "不利にならない条件を与える",
+      "answer": "B",
+      "explanation": "最恵国待遇（MFN）は平等な扱いを求める原則。"
+    },
+    {
+      "sentence": "輸入者がドル建て送金する場合、適用される相場はどちら？",
+      "optionA": "TTB",
+      "optionB": "TTS",
+      "answer": "B",
+      "explanation": "輸入者はドルを「買う」ので TTS。"
+    }
+  ]
+}

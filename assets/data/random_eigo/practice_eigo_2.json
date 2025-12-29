@@ -1,0 +1,12 @@
+{
+  "questions": [
+    {
+      "sentence_en": "Which word fits best in the blank (____)?",
+      "optionA_en": "because",
+      "optionB_en": "although",
+      "optionC_en": "so",
+      "answer": "B",
+      "explanation_en": "Although は対比を表す接続詞として正しい。"
+    }
+  ]
+}

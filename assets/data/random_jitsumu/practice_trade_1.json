@@ -1,0 +1,982 @@
+{
+  "questions": [
+    {
+      "question": "日本人のニーズに合った品質デザイン味等の商品を海外工場で委託生産し輸入する形態をOEM輸入という。",
+      "answer": false,
+      "explanation": "開発輸入の説明。OEMは自社ブランドを海外で製造してもらう形態。"
+    },
+    {
+      "question": "コンテナ船を停泊させる場所をコンテナ・エプロンという。",
+      "answer": false,
+      "explanation": "コンテナ・バースが正しい。エプロンは岸壁〜ヤードの場所。"
+    },
+    {
+      "question": "CFRでは運賃は輸出者負担である。",
+      "answer": true,
+      "explanation": "CFRでは運賃は輸出者、保険料は輸入者が負担する。"
+    },
+    {
+      "question": "インコタームズ2020の使用は義務ではなく任意である。",
+      "answer": true,
+      "explanation": "当事者の合意があれば採用される。"
+    },
+    {
+      "question": "信用状は審査なしで発行される。",
+      "answer": false,
+      "explanation": "信用状は銀行の与信行為に基づき審査が必要。"
+    },
+        {
+
+      "question": "輸出者は必ず信用状取引を使わなければならない。",
+      "answer": false,
+      "explanation": "信用状取引は義務ではなく、条件によって選択されます。"
+    },
+    {
+
+      "question": "船荷証券は輸送中の貨物の所有権を表す。",
+      "answer": true,
+      "explanation": "船荷証券（B/L）は貨物の所有権や受け取り権を証明します。"
+    },
+    {
+ 
+      "question": "輸入者は輸入許可証がなくても貨物を受け取れる。",
+      "answer": false,
+      "explanation": "輸入許可証が必要な場合があります。"
+    },
+    {
+   
+      "question": "信用状は銀行が支払い保証する書類である。",
+      "answer": true,
+      "explanation": "信用状は銀行が条件を満たせば支払いを保証する書類です。"
+    },
+    {
+
+      "question": "貿易取引では契約書が不要である。",
+      "answer": false,
+      "explanation": "契約書は取引条件を明確にするために必要です。"
+    },
+    {
+
+      "question": "FOB条件では輸出者は貨物を船積港まで運ぶ責任がある。",
+      "answer": true,
+      "explanation": "FOB条件では輸出者が船積港まで貨物を運ぶ義務があります。"
+    },
+    {
+
+      "question": "輸送保険は任意であり契約に含めなくても良い。",
+      "answer": true,
+      "explanation": "保険は契約内容によりますが、任意の場合もあります。"
+    },
+    {
+
+      "question": "CIF条件では輸入者が保険料を支払う。",
+      "answer": false,
+      "explanation": "CIF条件では輸出者が保険料を負担します。"
+    },
+    {
+
+      "question": "船荷証券は貨物が到着してから発行される。",
+      "answer": false,
+      "explanation": "船荷証券は貨物の船積時に発行されます。"
+    },
+    {
+  
+      "question": "信用状取引は国際取引で一般的に使われる。",
+      "answer": true,
+      "explanation": "国際取引では信用状取引が安全性のため一般的です。"
+    },
+    {
+  
+      "question": "貿易取引は国内取引よりも契約の締結から履行までの期間が短い。",
+      "answer": false,
+      "explanation": "国際輸送や通関手続きが必要なため、国内取引より期間が長くなる傾向があります。"
+    },
+    {
+   
+      "question": "貿易取引では、船積みの時期や代金決済方法等を契約の条件として前もって取り決めておく。",
+      "answer": true,
+      "explanation": "国際取引では条件を事前に明確化することが重要です。"
+    },
+    {
+
+      "question": "売主と買主は契約を結ぶことで自己の義務を果たすことを約束する。",
+      "answer": true,
+      "explanation": "契約は双方の義務と権利を明確化します。"
+    },
+    {
+      "question": "貿易取引は国内取引よりリスクが多い。",
+      "answer": true,
+      "explanation": "国際取引では距離・通関・為替変動などのリスクが加わります。"
+    },
+    {
+
+      "question": "貿易取引では、相互の情報が少ないため、信用、代金回収、商品入手のリスクがある。",
+      "answer": true,
+      "explanation": "相手国の情報不足がトラブルにつながる可能性があります。"
+    },
+    {
+   
+      "question": "商品譲渡と代金決済のズレのことを資金負担という。",
+      "answer": true,
+      "explanation": "資金負担は、代金回収前に費用を先に負担する状態を指します。"
+    },
+    {
+      "question": "一般に「貿易」とは「異なる国の間で行う売買取引」である。",
+      "answer": true,
+      "explanation": "国境を越える売買取引を指します。"
+    },
+    {
+   
+      "question": "自国と他国の間だけではなく、自国以外の多国間の取引を行うことも「貿易」という。",
+      "answer": true,
+      "explanation": "第三国間貿易も貿易に含まれます。"
+    },
+    {
+     
+      "question": "B/Eとは、Bill of Exchangeの略で、船荷証券のことである。",
+      "answer": false,
+      "explanation": "B/Eは為替手形の略であり、船荷証券（B/L）とは異なります。"
+    },
+    {
+     
+      "question": "信用状とは、輸出者の取引銀行が輸入者に対して、代金の支払いを確約した保証状である。",
+      "answer": false,
+      "explanation": "信用状は輸入者の依頼により銀行が輸出者に支払いを保証する書類です。"
+    },
+    {
+     
+      "question": "インボイス、船荷証券、為替手形は三大船積書類と呼ばれている。",
+      "answer": false,
+      "explanation": "三大船積書類はインボイス、船荷証券、保険証券です。"
+    },
+    {
+      
+      "question": "手形の買取依頼とは、信用状と為替手形、船積書類を買い取り銀行に持ち込むことである。",
+      "answer": true,
+      "explanation": "手形の買取依頼は、信用状・為替手形・船積書類を買い取り銀行に提示して代金を受け取る取引です。"
+    },
+     {
+      "question": "FOBはFree On Boardの略である。",
+      "answer": true,
+      "explanation": "FOBは「Free On Board」の略で、輸出者が船積港までの責任を負う条件です。"
+    },
+    {
+
+      
+
+      "question": "CIFは輸入者が保険料を支払う条件である。",
+      "answer": false,
+      "explanation": "CIFでは輸出者が保険料を支払います。"
+    },
+    {
+      "question": "DAP条件では輸出者は貨物を指定地まで届ける責任がある。",
+      "answer": true,
+      "explanation": "DAP（Delivered At Place）では輸出者が指定地まで運ぶ義務があります。"
+    },
+    {
+      
+      "question": "EXW条件では輸入者が輸出者の工場まで取りに行く必要がある。",
+      "answer": true,
+      "explanation": "EXW（Ex Works）では輸入者が引取責任を負います。"
+    },
+    {
+      
+      "question": "インコタームズは国際貿易の輸送条件を統一したルールである。",
+      "answer": true,
+      "explanation": "インコタームズは売買契約における輸送条件を明確にするための国際ルールです。"
+    },
+    {
+      "question": "FOB条件では輸出者が保険をかける義務がある。",
+      "answer": false,
+      "explanation": "FOBでは保険は輸入者の責任です。"
+    },
+    {
+      "question": "CFR条件では輸出者は運賃を負担する。",
+      "answer": true,
+      "explanation": "CFR（Cost and Freight）では輸出者が運賃を負担します。"
+    },
+    {
+
+      "question": "DAPでは輸入者は通関手続きを行う。",
+      "answer": true,
+      "explanation": "DAPでは輸入者が輸入通関を行います。"
+    },
+    {
+      "question": "インコタームズは必ず法律で定められている。",
+      "answer": false,
+      "explanation": "インコタームズは国際商業会議所の規則であり、法律ではありません。"
+    },
+    {
+      "question": "インコタームズのルールは契約で自由に変更できる。",
+      "answer": true,
+      "explanation": "契約当事者間で合意すれば変更可能です。"
+    },
+    {
+      "question": "EXWでは輸出通関も輸入者が行う必要がある。",
+      "answer": true,
+      "explanation": "EXW（Ex Works）条件では、輸出通関も輸入者の責任となります。"
+    },
+    {
+  
+      "question": "DDP条件では輸入者が輸入関税を支払う。",
+      "answer": false,
+      "explanation": "DDP（Delivered Duty Paid）では輸出者が関税を負担します。"
+    },
+    {
+   
+      "question": "CIPでは輸出者が最低限の保険をかける義務がある。",
+      "answer": true,
+      "explanation": "CIP（Carriage and Insurance Paid To）では輸出者に保険付保義務があります。"
+    },
+    {
+
+      "question": "FASはFree Along Shipの略で、輸出者は貨物を船側まで持ち込む。",
+      "answer": true,
+      "explanation": "FASでは輸出者は船の横（船側）まで貨物を運びます。"
+    },
+    {
+
+      "question": "CFRではリスクは輸送中も輸出者が負担する。",
+      "answer": false,
+      "explanation": "CFRでは運賃は輸出者が負担しますが、リスクは船に積み込んだ時点で輸入者に移ります。"
+    },
+    {
+
+      "question": "FCA条件では輸出者は輸入者指定の運送業者に引き渡す。",
+      "answer": true,
+      "explanation": "FCA（Free Carrier）では輸出者は指定された運送業者に引き渡します。"
+    },
+    {
+
+      "question": "DDPは輸出者にとって最も負担が大きい条件である。",
+      "answer": true,
+      "explanation": "DDPでは輸出者が輸送費・保険・関税すべてを負担します。"
+    },
+    {
+   
+      "question": "DAP条件では輸出者が輸入国の関税を支払う。",
+      "answer": false,
+      "explanation": "DAPでは輸入通関および関税支払いは輸入者の責任です。"
+    },
+    {
+  
+      "question": "インコタームズは100年以上の歴史がある。",
+      "answer": true,
+      "explanation": "初版は1936年に国際商業会議所によって制定されました。"
+    },
+    {
+
+      "question": "DDUはインコタームズ2020でも使用される条件である。",
+      "answer": false,
+      "explanation": "DDU（Delivered Duty Unpaid）は廃止され、DAPやDPUが使われています。"
+    },
+    {
+
+      "question": "IncotermsはInternational Commercial Termsの略である。",
+      "answer": true,
+      "explanation": "Incotermsは国際商業取引条件の略称です。"
+    },
+    {
+
+      "question": "インコタームズは国際商業会議所（ICC）が策定している。",
+      "answer": true,
+      "explanation": "ICC（国際商業会議所）が1936年から策定・改訂しています。"
+    },
+    {
+
+      "question": "インコタームズ2020では全部で15種類の条件がある。",
+      "answer": false,
+      "explanation": "インコタームズ2020では11種類の条件が規定されています。"
+    },
+    {
+
+      "question": "EXWは輸出者にとって最も負担の軽い条件である。",
+      "answer": true,
+      "explanation": "工場渡し条件で、輸出者の責任が最も小さい条件です。"
+    },
+    {
+
+      "question": "FCAでは輸出者は輸入者が指定した運送人に貨物を引き渡す。",
+      "answer": true,
+      "explanation": "FCA（Free Carrier）は指定運送人への引き渡し条件です。"
+    },
+    {
+
+      "question": "FASはFree Along Shipの略である。",
+      "answer": true,
+      "explanation": "船側渡条件で、輸出者は貨物を船の横に置く義務を負います。"
+    },
+    {
+
+      "question": "FOBではリスクは船積港で輸入者に移転する。",
+      "answer": true,
+      "explanation": "FOB（Free On Board）では船上に積み込んだ時点でリスクが移ります。"
+    },
+    {
+
+      "question": "CFRはCost and Freightの略である。",
+      "answer": true,
+      "explanation": "運賃込み条件で、輸出者が運賃を負担します。"
+    },
+    {
+
+      "question": "CFRではリスクは輸送中も輸出者が負担する。",
+      "answer": false,
+      "explanation": "リスクは積込時点で輸入者に移ります。"
+    },
+    {
+      "question": "CIF条件では輸出者は貨物保険をかける義務がある。",
+      "answer": true,
+      "explanation": "CIFは運賃・保険料込み条件で、輸出者が保険を付保します。"
+    },
+    {
+      "question": "CIF条件で輸入者が保険料を負担する。",
+      "answer": false,
+      "explanation": "保険料は輸出者が負担します。"
+    },
+    {
+
+      "question": "CPTはCarriage Paid Toの略である。",
+      "answer": true,
+      "explanation": "運送費込み条件で、輸出者が指定地まで運賃を負担します。"
+    },
+    {
+      "question": "CPTでは輸出者が貨物保険をかける義務がある。",
+      "answer": false,
+      "explanation": "CPTには保険付保義務はなく、保険は任意です。"
+    },
+    {
+      "question": "CIPはCarriage and Insurance Paid Toの略である。",
+      "answer": true,
+      "explanation": "CIPは運賃・保険料込み条件で、輸出者が保険付保します。"
+    },
+    {
+
+      "question": "CIP条件では輸出者は最低限の保険しかかけなくてよい。",
+      "answer": false,
+      "explanation": "CIP条件ではより高い水準の保険付保が求められます（ICC A）。"
+    },
+    {
+      "question": "DAPはDelivered At Placeの略である。",
+      "answer": true,
+      "explanation": "指定地渡条件で、輸出者が指定地まで輸送します。"
+    },
+    {
+   
+      "question": "DAPでは輸出者が輸入関税を支払う。",
+      "answer": false,
+      "explanation": "輸入通関と関税は輸入者が負担します。"
+    },
+    {
+    
+      "question": "DPUはDelivered at Place Unloadedの略である。",
+      "answer": true,
+      "explanation": "荷卸込渡条件で、輸出者は指定地で荷卸しまで行います。"
+    },
+    {
+      "question": "DPUはインコタームズ2010から存在する条件である。",
+      "answer": false,
+      "explanation": "DPUは2020年版で新設され、旧DATが置き換えられました。"
+    },
+    {
+      "question": "DDPはDelivered Duty Paidの略である。",
+      "answer": true,
+      "explanation": "関税込持込渡条件で、輸出者が全ての費用を負担します。"
+    },
+    {
+      "question": "DDPは輸出者にとって最も負担が重い条件である。",
+      "answer": true,
+      "explanation": "通関、関税、輸送費用すべてを輸出者が負担します。"
+    },
+    {
+
+      "question": "インコタームズは代金決済条件を規定している。",
+      "answer": false,
+      "explanation": "インコタームズは輸送・費用・リスクの分担を規定します。"
+    },
+    {
+      "question": "インコタームズは貨物の所有権移転時期を定めている。",
+      "answer": false,
+      "explanation": "所有権移転は規定しておらず、契約で別途定めます。"
+    },
+    {
+      "question": "インコタームズは通関手続きの責任分担を明確化する。",
+      "answer": true,
+      "explanation": "輸出通関と輸入通関のどちらが責任を負うかを規定します。"
+    },
+    {
+      "question": "海上輸送専用条件にはFOB、FAS、CFR、CIFがある。",
+      "answer": true,
+      "explanation": "これら4つは海上輸送専用の条件です。"
+    },
+    {
+      "question": "航空輸送にもFOB条件を適用することが推奨される。",
+      "answer": false,
+      "explanation": "FOBは船積みに限定され、航空輸送には適しません。"
+    },
+    {
+      "question": "インコタームズは1936年に初めて制定された。",
+      "answer": true,
+      "explanation": "ICCが1936年に初版を発表しました。"
+    },
+    {
+
+      "question": "インコタームズは10年ごとに必ず改訂される。",
+      "answer": false,
+      "explanation": "必ずではなく、実務の変化に応じて改訂されています。"
+    },
+    {
+      
+      "question": "インコタームズ2010から2020でDATが廃止された。",
+      "answer": true,
+      "explanation": "DAT（Delivered At Terminal）はDPUに置き換えられました。"
+    },
+    {
+      "question": "EXWでは輸入者は輸出通関を自国で行う必要がある。",
+      "answer": true,
+      "explanation": "EXWでは輸入者が輸出国で輸出通関する義務があります。"
+    },
+    {
+
+      "question": "FCAではコンテナ輸送にも適している。",
+      "answer": true,
+      "explanation": "FCAは多様な輸送手段に対応可能です。"
+    },
+    {
+
+      "question": "FOBはコンテナ輸送でも一般的に使用される。",
+      "answer": false,
+      "explanation": "コンテナ輸送にはFCAが推奨されます。"
+    },
+    {
+      "question": "CFRとCIFは主にバルク貨物や大量貨物に利用される。",
+      "answer": true,
+      "explanation": "主に海上輸送で利用される条件です。"
+    },
+    {
+      "question": "CIPはCIFよりも強い保険付保義務がある。",
+      "answer": true,
+      "explanation": "CIPではICC A条件が求められ、CIFではICC Cが最低基準です。"
+    },
+    {
+      "question": "DAPでは輸入者が輸入通関を行う。",
+      "answer": true,
+      "explanation": "輸入通関は輸入者が責任を負います。"
+    },
+    {
+      "question": "DPUでは輸入者が荷卸しを行う。",
+      "answer": false,
+      "explanation": "DPUでは輸出者が荷卸し義務を負います。"
+    },
+    {
+      "question": "DDPでは輸入通関も輸出者が行う。",
+      "answer": true,
+      "explanation": "DDPは輸入通関まで輸出者が負担します。"
+    },
+    {
+      "question": "インコタームズは世界中で統一的に使用されている。",
+      "answer": true,
+      "explanation": "国際貿易における共通ルールとして利用されています。"
+    },
+    {
+      "question": "インコタームズは国内取引には利用できない。",
+      "answer": false,
+      "explanation": "国内取引でも利用可能です。"
+    },
+    {
+      "question": "EXWでは輸入者が貨物の積み込みを行う。",
+      "answer": true,
+      "explanation": "EXWは工場渡し条件で、積込も輸入者の負担です。"
+    },
+    {
+
+      "question": "FCAでは輸出者が輸出通関を行う。",
+      "answer": true,
+      "explanation": "FCAでは輸出者が輸出通関を行います。"
+    },
+    {
+      "question": "FASではリスクは船に積み込んだ時点で輸入者に移る。",
+      "answer": false,
+      "explanation": "FASでは船側で引き渡し、リスクはその時点で移ります。"
+    },
+    {
+      "question": "FOBでは輸出者が輸出通関を行う。",
+      "answer": true,
+      "explanation": "FOBでは輸出者が輸出通関を行います。"
+    },
+    {
+      "question": "CFRでは輸出者が輸出通関を行う。",
+      "answer": true,
+      "explanation": "CFRでは輸出者が輸出通関を行います。"
+    },
+    {
+      "question": "CIFでは輸入者が輸出通関を行う。",
+      "answer": false,
+      "explanation": "輸出通関は輸出者の責任です。"
+    },
+    {
+      "question": "CPTでは輸出者が輸出通関を行う。",
+      "answer": true,
+      "explanation": "CPTでも輸出者が輸出通関を行います。"
+    },
+    {
+      "question": "CIPでは輸入者が輸出通関を行う。",
+      "answer": false,
+      "explanation": "CIPでも輸出者が輸出通関を行います。"
+    },
+    {
+      "question": "DDPでは輸入者が輸出通関を行う。",
+      "answer": false,
+      "explanation": "DDPでも輸出者が輸出通関を行います。"
+    },
+    {
+      "question": "インコタームズは輸送リスクの移転時点を定める。",
+      "answer": true,
+      "explanation": "各条件でリスクが移転する地点が明確化されています。"
+    },
+    {
+
+      "question": "貨物海上保険の目的は、輸送中に発生する貨物の損害を補償することである。",
+      "answer": true,
+      "explanation": "貨物海上保険は輸送途上での貨物損害や滅失を補償します。"
+    },
+    {
+      "question": "ICC(A)はオールリスクカバーであり、盗難や雨濡れによる損害も補償される。",
+      "answer": true,
+      "explanation": "ICC(A)は偶然の事故によるほぼ全ての損害を対象とします。"
+    },
+    {
+      "question": "ICC(C)は盗難や雨濡れも補償範囲に含まれる。",
+      "answer": false,
+      "explanation": "ICC(C)は火災・爆発・沈没など基本危険のみを補償し、盗難や雨濡れは対象外です。"
+    },
+    {
+      "question": "FPA条件では、単独海損は補償されない。",
+      "answer": true,
+      "explanation": "FPA（Free from Particular Average）は単独海損を免責とし、全損や共同海損のみを補償します。"
+    },
+    {
+      "question": "共同海損は、航海の安全のために犠牲にした損害を関係者全員で分担する制度である。",
+      "answer": true,
+      "explanation": "共同海損は船主・荷主が公平に損害を分担する仕組みです。"
+    },
+    {
+      "question": "単独海損は、特定の荷主にのみ生じた損害であり、その荷主が単独で負担する。",
+      "answer": true,
+      "explanation": "単独海損（Particular Average）は、特定の貨物にのみ発生した損害を指します。"
+    },
+    {
+
+      "question": "Cover Noteは、保険証券が発行されるまでの暫定的な保険契約証明である。",
+      "answer": true,
+      "explanation": "Cover Noteは暫定証明書で、後日保険証券が発行されます。"
+    },
+    {
+      "question": "Certificate of Insurance（保険証明書）は、信用状取引において保険の存在を証明するために利用される。",
+      "answer": true,
+      "explanation": "信用状条件では、簡易な保険証明書としてCertificate of Insuranceが使われます。"
+    },
+    {
+      "question": "Duration of Coverageは通常、輸出港から輸入港までの区間に限られる。",
+      "answer": false,
+      "explanation": "Duration of Coverageは通常“倉庫から倉庫まで（Warehouse to Warehouse）”で、港間に限定されません。"
+    },
+    
+  {
+    "question": "貨物海上保険の保険者は、政府である。",
+    "answer": false,
+    "explanation": "貨物海上保険の保険者は通常、民間の保険会社であり、政府ではありません。"
+  },
+  {
+    "question": "貨物海上保険で保険会社は、予定保険から確定保険に切り替えたときに、はじめて保険証券を発行する。",
+    "answer": false,
+    "explanation": "予定保険（Provisional Policy）の契約時の段階で「予定保険証券」が発行されます。"
+  },
+  {
+    "question": "貨物海上保険を誰が付保するかは貿易条件により異なるが、FOB条件の場合、輸出者が付保する責任を負う。",
+    "answer": false,
+    "explanation": "FOB条件では輸入者が付保責任を負います。CIF条件のとき輸出者が付保します。"
+  },
+  {
+
+    "question": "盗難、抜荷、不着損害の危険に対してはA/R WAで一括担保されているが、FPAには付保されていない。",
+    "answer": false,
+    "explanation": "A/R では盗難・抜荷・不着も含まれますが、WA,FPA（分損不担保）では担保されません。"
+  },
+  {
+    "question": "保険証券といっしょに発行されるDebit Noteとは、保険料請求書のことで、輸入申告の際の保険料の証明書となる。",
+    "answer": true,
+    "explanation": "Debit Noteは保険料請求書であり、輸入申告時の証明書として使用されます。"
+  },
+  {
+  
+    "question": "貿易保険の対象となる非常危険とは、政策変更や戦争などによる不可抗力な事由によって起こる代金回収不能や輸出不能の危険をさす。",
+    "answer": true,
+    "explanation": "非常危険（Political Risks）は戦争・政策変更などによる代金回収不能や輸出不能を指します。"
+  },
+  {
+    "question": "輸出PL保険のてん補範囲には、訴訟費用・弁護士費用・応急手当費用は含まれるが、米国の懲罰的損害賠償金は含まれない。また、保険期間は1年で、てん補責任は損害賠償請求ベースである。",
+    "answer": true,
+    "explanation": "輸出PL保険では通常費用は含まれますが、米国特有の懲罰的損害賠償は除外され、期間は原則1年です。"
+  },
+  {
+    "question": "輸出手形保険は、信用状付き荷為替手形でも付保可能であり、その場合手形の名宛人は信用状発行銀行・確認銀行・輸入者である必要がある。",
+    "answer": false,
+    "explanation": "信用状付き手形の場合も付保可能で、名宛人はL/C発行銀行・確認銀行・補償銀行でなければなりません。輸入者ではありません。"
+  },
+  {
+    "question": "米国やEU諸国ではPL責任は無過失責任であるが、日本では過失責任主義を採用している。",
+    "answer": false,
+    "explanation": "日本においても1995年に製造物責任法が施行され、生産者や流通業者の無過失責任が認められるようになりました。"
+  },
+  {
+
+    "question": "貿易保険を利用するには、取引相手が日本貿易保険（NEXI）の海外商社名簿に登録されていなければならない。",
+    "answer": true,
+    "explanation": "取引相手が日本貿易保険が公表している海外商社名簿に登録されていなければなりません。"
+  },
+  {
+   
+      "question": "信用状は輸出者に支払いを保証する銀行の書類である。",
+      "answer": true,
+      "explanation": "信用状は条件を満たせば銀行が輸出者に支払いを保証します。"
+    },
+    {
+     
+      "question": "信用状は契約成立後、輸入者が自由に変更できる。",
+      "answer": false,
+      "explanation": "信用状の変更には輸出者と銀行の同意が必要です。"
+    },
+    {
+     
+      "question": "確認信用状（Confirmed L/C）は輸出者にとって安全性が高い。",
+      "answer": true,
+      "explanation": "確認信用状は輸出者が銀行から直接支払い保証を受けられます。"
+    },
+    {
+      
+      "question": "信用状は必ず現金取引と同じ条件で使われる。",
+      "answer": false,
+      "explanation": "信用状は契約条件に応じて使われます。"
+    },
+    {
+     
+      "question": "信用状には有効期限がある。",
+      "answer": true,
+      "explanation": "信用状には期限が設定され、その期間内に書類を提出する必要があります。"
+    },
+    {
+      
+      "question": "信用状取引では輸出者は書類不備でも支払いを受けられる。",
+      "answer": false,
+      "explanation": "書類不備があると銀行は支払いを拒否できます。"
+    },
+    {
+     
+      "question": "信用状は国際貿易で一般的に利用される。",
+      "answer": true,
+      "explanation": "国際取引では支払いの安全性のために信用状がよく使われます。"
+    },
+    {
+     
+      "question": "信用状は銀行間でのみやり取りされ、輸入者は関係ない。",
+      "answer": false,
+      "explanation": "輸入者も信用状の申請や条件確認に関わります。"
+    },
+    {
+     
+      "question": "信用状は郵便で送付する必要がある。",
+      "answer": false,
+      "explanation": "電子信用状（e-L/C）も普及しており、郵便だけではありません。"
+    },
+    {
+     
+      "question": "信用状は輸出者にとって支払いリスクを軽減する。",
+      "answer": true,
+      "explanation": "銀行保証により輸出者は安全に取引できます。"
+    },
+    {
+     
+      "question": "信用状は銀行が輸出者に支払いを保証する書類である。",
+      "answer": true,
+      "explanation": "信用状は条件を満たせば銀行が輸出者に支払いを保証します。"
+    },
+    {
+      
+      "question": "信用状は契約成立後、輸入者だけの意思で変更できる。",
+      "answer": false,
+      "explanation": "信用状の変更には輸出者と全関係銀行の同意が必要です。"
+    },
+    {
+    
+      "question": "信用状には有効期限が設定されている。",
+      "answer": true,
+      "explanation": "有効期限内に書類を提出する必要があります。"
+    },
+    {
+      
+      "question": "信用状取引では書類と貨物の内容が一致している必要がある。",
+      "answer": true,
+      "explanation": "書類不一致は支払い拒否（ディスクレ）の原因になります。"
+    },
+    {
+      
+      "question": "確認信用状は輸出者にとって安全性が高い。",
+      "answer": true,
+      "explanation": "確認銀行も支払いを保証するため、発行銀行リスクを回避できます。"
+    },
+    {
+     
+      "question": "信用状は必ず現金取引と同じ条件で行われる。",
+      "answer": false,
+      "explanation": "条件は契約に応じて異なります。"
+    },
+    {
+      
+      "question": "ディスクレは信用状条件と書類内容が一致している状態を指す。",
+      "answer": false,
+      "explanation": "ディスクレ（Discrepancy）は条件と書類の不一致です。"
+    },
+    {
+      
+      "question": "信用状は国際貿易で広く使われている。",
+      "answer": true,
+      "explanation": "国際取引では支払い安全確保のためよく利用されます。"
+    },
+    {
+      
+      "question": "通知銀行は輸出者の希望で必ず選べる。",
+      "answer": false,
+      "explanation": "発行銀行が決定しますが、輸出者が希望を出すことは可能です。"
+    },
+    {
+     
+      "question": "電子信用状（e-L/C）は郵便で送付する信用状よりも早い。",
+      "answer": true,
+      "explanation": "電子送信により時間短縮が可能です。"
+    },
+    {
+      
+      "question": "UCP600を適用する信用状では、特に記載がなくても取消不能とみなされる。",
+      "answer": true,
+      "explanation": "UCP600第3条に規定されています。"
+    },
+    {
+      
+      "question": "Restricted L/Cはどの銀行でも利用可能な信用状である。",
+      "answer": false,
+      "explanation": "Restricted L/Cは指定銀行でのみ利用可能です。"
+    },
+    {
+     
+      "question": "Open L/Cは利用銀行の制限がない信用状である。",
+      "answer": true,
+      "explanation": "どの銀行でも交渉（ネゴ）可能です。"
+    },
+    {
+      
+      "question": "Standby L/Cは通常の支払い手段として利用される。",
+      "answer": false,
+      "explanation": "Standby L/Cは保証状として機能します。"
+    },
+    {
+      
+      "question": "Revolving L/Cは取引金額や期限が自動的に復活する。",
+      "answer": true,
+      "explanation": "繰返し取引用に設定されます。"
+    },
+    {
+      
+      "question": "Sight L/Cは書類提示後すぐに支払いが行われる。",
+      "answer": true,
+      "explanation": "即期信用状とも呼ばれます。"
+    },
+    {
+     
+      "question": "Usance L/Cは一定期間後に支払いが行われる。",
+      "answer": true,
+      "explanation": "手形期日払いの信用状です。"
+    },
+    {
+      
+      "question": "Back-to-Back L/Cは輸出者が仕入先に対して発行する信用状である。",
+      "answer": true,
+      "explanation": "輸出者が仕入のために利用します。"
+    },
+    {
+      
+      "question": "Transferable L/Cは輸出者から他者へ譲渡可能な信用状である。",
+      "answer": true,
+      "explanation": "信用状の権利を他の受益者に移せます。"
+    },
+    {
+      
+      "question": "Red Clause L/Cは貨物出荷前に資金を受け取れる信用状である。",
+      "answer": true,
+      "explanation": "前渡条項付き信用状です。"
+    },
+    {
+      
+      "question": "信用状の条件変更には発行銀行、輸入者、輸出者、関係銀行全員の同意が必要。",
+      "answer": true,
+      "explanation": "部分的な変更も全関係者の同意が必要です。"
+    },
+    {
+      
+      "question": "確認銀行は輸入者側の銀行である。",
+      "answer": false,
+      "explanation": "確認銀行は輸出者側の銀行が多いです。"
+    },
+    {
+      
+      "question": "ディスクレがある場合でも輸入者が承諾すれば支払い可能。",
+      "answer": true,
+      "explanation": "輸入者承諾により不一致書類でも支払いできます。"
+    },
+    {
+      
+      "question": "部分船積を禁止する条件は信用状に明記する必要がある。",
+      "answer": true,
+      "explanation": "UCP600では明記がない限り部分船積可とされます。"
+    },
+    {
+      
+      "question": "Transhipmentは禁止が明記されていなければ認められる。",
+      "answer": true,
+      "explanation": "UCP600に従います。"
+    },
+    {
+      
+      "question": "L/Cの有効期限切れ後でも、発行銀行は支払い義務を負う。",
+      "answer": false,
+      "explanation": "期限切れ後の書類提示には支払い義務がありません。"
+    },
+    {
+      
+      "question": "信用状は貨物の品質保証も含む。",
+      "answer": false,
+      "explanation": "信用状は書類取引であり、貨物自体の品質保証ではありません。"
+    },
+    {
+      
+      "question": "Negotiationとは、銀行が輸出者の書類を買い取ることを指す。",
+      "answer": true,
+      "explanation": "ネゴシエーション＝書類買取のことです。"
+    },
+    {
+     
+      "question": "通知銀行は信用状条件の審査義務を負う。",
+      "answer": false,
+      "explanation": "通知銀行は条件内容を審査する義務はありません。"
+    },
+    {
+      
+      "question": "発行銀行は輸入者の信用に基づいて信用状を発行する。",
+      "answer": true,
+      "explanation": "発行前に信用調査が行われます。"
+    },
+    {
+      
+      "question": "Standby L/Cは支払いが行われない場合にのみ発動される。",
+      "answer": true,
+      "explanation": "主契約の不履行時に機能します。"
+    },
+
+    {
+      
+      "question": "Deferred Payment L/Cは即時払いの信用状である。",
+      "answer": false,
+      "explanation": "一定期間後に支払いが行われます。"
+    },
+    {
+    
+      "question": "Irrevocable L/Cは輸入者が単独で取り消しできる。",
+      "answer": false,
+      "explanation": "全関係者の同意が必要です。"
+    },
+    {
+     
+      "question": "Revocable L/Cは現在ほとんど利用されない。",
+      "answer": true,
+      "explanation": "UCP600では基本的にIrrevocableが標準です。"
+    },
+    {
+      
+      "question": "Clean L/Cは条件が緩く、書類提出義務がない。",
+      "answer": false,
+      "explanation": "通常は必要書類が指定されます。"
+    },
+    {
+      
+      "question": "Dirty L/Cという用語は信用状実務には存在しない。",
+      "answer": true,
+      "explanation": "信用状の分類には使われません。"
+    },
+    {
+      
+      "question": "Usance信用状は輸入者の資金繰りに有利。",
+      "answer": true,
+      "explanation": "支払いを先延ばしできるためです。"
+    },
+    {
+      
+      "question": "Sight信用状は輸出者の資金回収を早める。",
+      "answer": true,
+      "explanation": "即期払いのためです。"
+    },
+    {
+     
+      "question": "Transferable L/Cは部分譲渡も可能。",
+      "answer": true,
+      "explanation": "信用状の条件によっては部分譲渡できます。"
+    },
+    {
+      
+      "question": "Back-to-Back L/Cでは元のL/C条件を変更できない。",
+      "answer": false,
+      "explanation": "一部条件を変えて発行可能です。"
+    },
+    {
+      
+      "question": "Red Clause L/Cは輸入者にとってリスクが高い。",
+      "answer": true,
+      "explanation": "貨物出荷前に資金を渡すためです。"
+    },
+    {
+      
+      "question": "Revolving L/Cは輸入者の長期的支払い保証になる。",
+      "answer": true,
+      "explanation": "契約期間中は自動的に更新されます。"
+    },
+    {
+      
+      "question": "Open L/Cは輸出者にとって利用銀行を選べる利点がある。",
+      "answer": true,
+      "explanation": "制限がないため、自分の取引銀行を使えます。"
+    },
+    {
+     
+      "question": "Restricted L/Cは輸出者の資金化先が限定される。",
+      "answer": true,
+      "explanation": "指定銀行のみで買取可能です。"
+    },
+    {
+     
+      "question": "スタンバイ信用状は国際的に保証状として広く利用される。",
+      "answer": true,
+      "explanation": "米国や国際取引でよく使われます。"
+    },
+    {
+      
+      "question": "信用状条件の不一致は支払いに影響しない。",
+      "answer": false,
+      "explanation": "ディスクレは支払い拒否の原因になります。"
+    },
+    {
+      
+      "question": "発行銀行は信用状に基づく支払い義務を必ず果たさなければならない。",
+      "answer": true,
+      "explanation": "条件一致の書類が提示されれば支払い義務が発生します。"
+    }
+  ]
+}

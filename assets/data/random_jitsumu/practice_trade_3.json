@@ -1,0 +1,26 @@
+{
+  "passage": [
+    "（1）国内PL保険…有体物である工業製品、（ ① ）等…部品、（ ② ）も対象…（ ③ ）責任という。",
+    "（2）インコタームズは（ ④ ）が定め、2020年版の使用は（ ⑤ ）。費用負担と危険負担は原則（ ⑥ ）だが、CFR/CIF/CPT/CIPは（ ⑦ ）。",
+    "（3）混載業者が航空会社から受け取る運送状は（ ⑧ ）、荷主に発行する運送状は（ ⑨ ）。信用状取引では輸入者は（ ⑩ ）を発行してもらう。"
+  ],
+  "wordBank": [
+    "積戻し", "House Air Waybill", "同一", "経済産業大臣", "Blank Endorsement",
+    "農水産物", "電気", "申請手続", "D/D", "On Board Notation",
+    "自由", "ISO", "拡大生産者", "義務", "市場", "Release Order",
+    "P/P", "Master Air Waybill", "異なる", "原材料", "無過失", "製造物", "熱"
+  ],
+  "questions": [
+    { "number": 1, "answer": "農水産物", "explanation": "…" },
+    { "number": 2, "answer": "原材料", "explanation": "…" },
+    { "number": 3, "answer": "製造物", "explanation": "…" },
+    { "number": 4, "answer": "ISO", "explanation": "…" },
+    { "number": 5, "answer": "自由", "explanation": "…" },
+    { "number": 6, "answer": "同一", "explanation": "…" },
+    { "number": 7, "answer": "異なる", "explanation": "…" },
+    { "number": 8, "answer": "Master Air Waybill", "explanation": "…" },
+    { "number": 9, "answer": "House Air Waybill", "explanation": "…" },
+    { "number": 10, "answer": "Release Order", "explanation": "…" }
+  ]
+}
+
