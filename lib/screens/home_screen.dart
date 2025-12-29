@@ -5,22 +5,31 @@ import '../pra_cate.dart';
 class HomeScreen extends StatelessWidget {
   const HomeScreen({super.key});
 
+  // 🎨 Premium Monochrome
+  static const Color bgBlack = Color(0xFF0F0F0F);
+  static const Color surface = Color(0xFF1A1A1A);
+  static const Color border = Color(0xFF2A2A2A);
+  static const Color textPrimary = Color(0xFFEDEDED);
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: bgBlack,
+
       appBar: AppBar(
-        elevation: 2,
-        backgroundColor: Colors.white,
+        elevation: 0,
+        backgroundColor: surface,
         centerTitle: true,
         title: const Text(
           "貿易実務検定C級",
           style: TextStyle(
-            color: Colors.black87,
-            fontWeight: FontWeight.bold,
+            color: textPrimary,
+            fontWeight: FontWeight.w600,
             fontSize: 18,
+            letterSpacing: 0.4,
           ),
         ),
-        iconTheme: const IconThemeData(color: Colors.black87),
+        iconTheme: const IconThemeData(color: textPrimary),
       ),
 
       body: LayoutBuilder(
@@ -32,7 +41,7 @@ class HomeScreen extends StatelessWidget {
               child: ConstrainedBox(
                 constraints: const BoxConstraints(maxWidth: 900),
                 child: Padding(
-                  padding: const EdgeInsets.all(20),
+                  padding: const EdgeInsets.all(24),
                   child: isWide
                       ? _buildWideLayout(context)
                       : _buildNarrowLayout(context),
@@ -45,9 +54,7 @@ class HomeScreen extends StatelessWidget {
     );
   }
 
-  // =============================
-  // 📱 スマホ表示（縦並び）
-  // =============================
+  // 📱 Mobile
   Widget _buildNarrowLayout(BuildContext context) {
     return Column(
       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -79,12 +86,9 @@ class HomeScreen extends StatelessWidget {
     );
   }
 
-  // =============================
-  // 💻 PC / iPad（横並び）
-  // =============================
+  // 💻 Wide
   Widget _buildWideLayout(BuildContext context) {
     return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
       children: [
         Expanded(
           child: _bigButton(
@@ -102,7 +106,7 @@ class HomeScreen extends StatelessWidget {
             },
           ),
         ),
-        const SizedBox(width: 20),
+        const SizedBox(width: 24),
         Expanded(
           child: _bigButton(
             title: "大問別問題",
@@ -120,23 +124,26 @@ class HomeScreen extends StatelessWidget {
     );
   }
 
-  // =============================
-  // 🔵 共通の巨大ボタン
-  // =============================
+  // 🔘 Premium Button
   Widget _bigButton({required String title, required VoidCallback onTap}) {
     return InkWell(
-      borderRadius: BorderRadius.circular(24),
+      borderRadius: BorderRadius.circular(22),
       onTap: onTap,
       child: Container(
-        height: 180,
+        height: 160,
         decoration: BoxDecoration(
-          color: Colors.blueAccent.shade100,
-          borderRadius: BorderRadius.circular(24),
+          gradient: const LinearGradient(
+            begin: Alignment.topLeft,
+            end: Alignment.bottomRight,
+            colors: [Color(0xFF111111), Color(0xFF1C1C1C)],
+          ),
+          borderRadius: BorderRadius.circular(22),
+          border: Border.all(color: border),
           boxShadow: [
             BoxShadow(
-              color: Colors.black26,
-              blurRadius: 12,
-              offset: const Offset(0, 4),
+              color: Colors.black.withOpacity(0.45),
+              blurRadius: 24,
+              offset: const Offset(0, 14),
             ),
           ],
         ),
@@ -144,9 +151,10 @@ class HomeScreen extends StatelessWidget {
           child: Text(
             title,
             style: const TextStyle(
-              fontSize: 26,
-              fontWeight: FontWeight.bold,
-              color: Colors.white,
+              fontSize: 24,
+              fontWeight: FontWeight.w600,
+              letterSpacing: 0.6,
+              color: textPrimary,
             ),
           ),
         ),
