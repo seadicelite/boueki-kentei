@@ -34,6 +34,151 @@
       "optionB": "TTS",
       "answer": "B",
       "explanation": "輸入者はドルを「買う」ので TTS。"
-    }
-  ]
+    },
+    
+
+
+  {
+    "sentence": "自ら国際輸送手段を持たない利用運送事業者を()という",
+    "optionA": "NVOCC",
+    "optionB": "NACCS",
+    "answer": "A",
+    "explanation": "自ら輸送手段を持たない利用運送事業者は NVOCC（Non-Vessel Operating Common Carrier）である。"
+  },
+  {
+    "sentence": "用船契約で、輸出港における積込費用および輸入港における荷卸費用が運賃に含まれていることを（）という？",
+    "optionA": "Berth Term",
+    "optionB": "FIO",
+    "answer": "A",
+    "explanation": "Berth Term は積込費用および荷卸費用が運賃に含まれる条件である。"
+  },
+  {
+    "sentence": "通常、貿易取引の売買契約で取り交わす一般取引条件は、注文書型・注文請書型契約書の（）に印刷されている？",
+    "optionA": "裏面",
+    "optionB": "表面",
+    "answer": "A",
+    "explanation": "一般取引条件は通常、契約書の裏面に印刷されている。"
+  },
+  {
+    "sentence": "貿易保険の対象となるリスクで、不可抗力により輸出不能や代金回収不能となる危険を（）という",
+    "optionA": "信用危険",
+    "optionB": "非常危険",
+    "answer": "B",
+    "explanation": "不可抗力による輸出不能や代金回収不能は非常危険に該当する。"
+  },
+  {
+    "sentence": "At 30 days after B/L date のように、確定日後に為替手形を決済する方法を（）という",
+    "optionA": "一覧後定期払い",
+    "optionB": "確定日後定期払い",
+    "answer": "B",
+    "explanation": "B/L日後○日といった方法は確定日後定期払いである。"
+  },
+  {
+    "sentence": "先物為替の受渡時期で、10月渡し・12月渡しなど将来の特定月を引渡月とする方法を（）という",
+    "optionA": "順月確定日渡し",
+    "optionB": "暦月オプション渡し",
+    "answer": "B",
+    "explanation": "将来の特定月を引渡月とする方法は暦月オプション渡しである。"
+  },
+  {
+    "sentence": "委託加工貿易で、委託者が日本にある場合を（）という",
+    "optionA": "順委託加工貿易",
+    "optionB": "逆委託加工貿易",
+    "answer": "B",
+    "explanation": "委託者が日本にある場合は順委託加工貿易という。"
+  },
+  {
+    "sentence": "TRIPS協定とは（）に関する協定か？",
+    "optionA": "知的財産権",
+    "optionB": "原産地規則",
+    "answer": "A",
+    "explanation": "TRIPS協定は知的財産権に関する協定である。"
+  },
+  {
+    "sentence": "輸出でコンテナ単位に満たない小口貨物は（）に持ち込まれるか？",
+    "optionA": "CFS",
+    "optionB": "CY",
+    "answer": "A",
+    "explanation": "小口貨物はCFSに持ち込まれ、他の貨物と混載される。"
+  },
+  {
+    "sentence": "在来船貨物で、船会社が貨物を全部一括して陸揚げすることを（）という",
+    "optionA": "総揚げ",
+    "optionB": "自家揚げ",
+    "answer": "A",
+    "explanation": "船会社が一括して陸揚げすることを総揚げという。"
+  },
+  {
+    "sentence": "WTOの原則で、他国に与えている条件より不利にならない条件を与えることを（）という",
+    "optionA": "内国民待遇",
+    "optionB": "最恵国待遇",
+    "answer": "B",
+    "explanation": "最恵国待遇は、他国に与える条件より不利にしない原則である。"
+  },
+  {
+    "sentence": "同一グループ企業間で輸出入を相殺し、差額のみ決済する方法を（）という",
+    "optionA": "ネッティング",
+    "optionB": "リーズ・アンド・ラッグス",
+    "answer": "A",
+    "explanation": "相殺して差額決済する方法をネッティングという。"
+  },
+  {
+    "sentence": "標準品売買で、穀物類の売買に用いられる品質条件を()という",
+    "optionA": "FAQ",
+    "optionB": "GMQ",
+    "answer": "A",
+    "explanation": "農産物・穀物類にはFAQ条件が用いられる。"
+  },
+  {
+    "sentence": "海外メーカー製品に自社ブランドを付けて輸入・販売する形態を()という",
+    "optionA": "OSL輸入",
+    "optionB": "OEM輸入",
+    "answer": "B",
+    "explanation": "自社ブランドで販売する形態はOEM輸入である。"
+  },
+  {
+    "sentence": "円高時に増加し、円安時に減少する為替調整用運賃サーチャージを()という",
+    "optionA": "BAF",
+    "optionB": "CAF",
+    "answer": "B",
+    "explanation": "為替変動に対応するサーチャージはCAFである。"
+  },
+  {
+    "sentence": "信用状取引における三大船積書類に含まれないものは()である",
+    "optionA": "パッキングリスト",
+    "optionB": "保険証券",
+    "answer": "A",
+    "explanation": "三大船積書類はインボイス・船荷証券・保険証券である。"
+  },
+  {
+    "sentence": "コンテナヤード内でコンテナの配列・整理を行う場所を（）という",
+    "optionA": "エプロン",
+    "optionB": "マーシャリング・ヤード",
+    "answer": "B",
+    "explanation": "コンテナ配列・整理を行うのはマーシャリング・ヤードである。"
+  },
+  {
+    "sentence": "取引見込先を確保するために積極的に売り込みを行うことを（）という",
+    "optionA": "Inquiry",
+    "optionB": "Proposal",
+    "answer": "B",
+    "explanation": "積極的な売り込みはProposalである。"
+  },
+  {
+    "sentence": "海外商社名簿の格付けを信用調査に利用することは（）",
+    "optionA": "できる",
+    "optionB": "できない",
+    "answer": "A",
+    "explanation": "海外商社名簿の格付けは信用調査に利用できる。"
+  },
+  {
+    "sentence": "信用状の条件を変更することを（）という",
+    "optionA": "ディスクレ",
+    "optionB": "アメンドメント",
+    "answer": "B",
+    "explanation": "信用状条件の変更はアメンドメントという。"
+  }
+]
+
+  
 }

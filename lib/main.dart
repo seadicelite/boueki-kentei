@@ -13,10 +13,7 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       title: '貿易実務検定 模擬試験',
-      theme: ThemeData(
-        fontFamily: 'NotoSansJP',
-        primarySwatch: Colors.lightBlue,
-      ),
+      theme: ThemeData(fontFamily: 'NotoSansJP', primarySwatch: Colors.blue),
       home: const HomeScreen(),
     );
   }
