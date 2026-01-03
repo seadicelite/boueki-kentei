@@ -1,35 +1,30 @@
 import 'package:flutter/material.dart';
 import 'exam_cate.dart';
 import '../pra_cate.dart';
+import 'package:boueki_kentei/core/colors.dart';
 
 class HomeScreen extends StatelessWidget {
   const HomeScreen({super.key});
 
-  // 🎨 Premium Monochrome
-  static const Color bgBlack = Color(0xFF0F0F0F);
-  static const Color surface = Color(0xFF1A1A1A);
-  static const Color border = Color(0xFF2A2A2A);
-  static const Color textPrimary = Color(0xFFEDEDED);
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: bgBlack,
+      backgroundColor: sc.back,
 
       appBar: AppBar(
         elevation: 0,
-        backgroundColor: surface,
+        backgroundColor: sc.appbar,
         centerTitle: true,
         title: const Text(
           "貿易実務検定C級",
           style: TextStyle(
-            color: textPrimary,
+            color: sc.text,
             fontWeight: FontWeight.w600,
             fontSize: 18,
             letterSpacing: 0.4,
           ),
         ),
-        iconTheme: const IconThemeData(color: textPrimary),
+        iconTheme: const IconThemeData(color: sc.icon),
       ),
 
       body: LayoutBuilder(
@@ -138,7 +133,7 @@ class HomeScreen extends StatelessWidget {
             colors: [Color(0xFF111111), Color(0xFF1C1C1C)],
           ),
           borderRadius: BorderRadius.circular(22),
-          border: Border.all(color: border),
+          border: Border.all(color: sc.text),
           boxShadow: [
             BoxShadow(
               color: Colors.black.withOpacity(0.45),
@@ -154,7 +149,7 @@ class HomeScreen extends StatelessWidget {
               fontSize: 24,
               fontWeight: FontWeight.w600,
               letterSpacing: 0.6,
-              color: textPrimary,
+              color: sc.text,
             ),
           ),
         ),

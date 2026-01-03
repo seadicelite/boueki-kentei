@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'dart:convert';
 import 'package:flutter/services.dart';
 import 'dart:math';
+import 'package:boueki_kentei/core/colors.dart';
 
 class PracticeTradeMarubatsuScreen extends StatefulWidget {
   final String title;
@@ -67,6 +68,7 @@ class _PracticeTradeMarubatsuScreenState
       decoration: BoxDecoration(
         color: isSelected ? activeColor : inactiveColor,
         borderRadius: BorderRadius.circular(12),
+
         boxShadow: isSelected
             ? [BoxShadow(color: activeColor.withOpacity(0.5), blurRadius: 12)]
             : [],
@@ -110,6 +112,7 @@ class _PracticeTradeMarubatsuScreenState
     final q = questions[currentIndex];
 
     return Scaffold(
+      backgroundColor: sc.back,
       appBar: AppBar(title: Text(widget.title)),
       body: ListView(
         padding: const EdgeInsets.all(16),

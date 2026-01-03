@@ -6,6 +6,7 @@ import 'screens/practice/pra_trade_wordbank.dart';
 import 'screens/practice/pra_eigo1.dart';
 import 'screens/practice/pra_eigo2.dart';
 import 'screens/practice/pra_eigo3.dart';
+import 'core/colors.dart';
 
 class PracticeCategoryScreen extends StatelessWidget {
   const PracticeCategoryScreen({super.key});
@@ -15,46 +16,50 @@ class PracticeCategoryScreen extends StatelessWidget {
     final List<Map<String, dynamic>> categories = [
       // 🟦 貿易実務
       {
-        "title": "📦 貿易実務 大問1：正誤問題",
+        "title": "実務 大問1：正誤問題",
         "file": "assets/data/random_jitsumu/practice_trade_1.json",
         "type": "trade",
       },
 
       {
-        "title": "📦 貿易実務 大問2：選択問題",
+        "title": "実務 大問2：選択問題",
         "file": "assets/data/random_jitsumu/practice_trade_2.json",
         "type": "trade_ab",
       },
       {
-        "title": "📦 貿易実務 大問3：語群選択問題",
+        "title": "実務 大問3：語群選択問題",
         "file": "assets/data/random_jitsumu/practice_trade_3.json",
         "type": "trade_wordbank",
       },
       {
-        "title": "📦 貿易実務 大問4：3択問題",
+        "title": "実務 大問4：3択問題",
         "file": "assets/data/random_jitsumu/practice_trade_4.json",
         "type": "trade_abc",
       },
       // 🟩 貿易英語
       {
-        "title": "🌐 貿易英語 大問1：英単語の意味",
+        "title": "英語 大問1：英単語の意味",
         "file": "assets/data/random_eigo/practice_eigo_1.json",
         "type": "english1",
       },
       {
-        "title": "🌐 貿易英語 大問2：英文和訳",
+        "title": "英語 大問2：英文和訳",
         "file": "assets/data/random_eigo/practice_eigo_2.json",
         "type": "english2",
       },
       {
-        "title": "🌐 貿易英語 大問3：英文解釈",
+        "title": "英語 大問3：英文解釈",
         "file": "assets/data/random_eigo/practice_eigo_3.json",
         "type": "english3",
       },
     ];
 
     return Scaffold(
-      appBar: AppBar(title: const Text("練習モード（ランダム出題）")),
+      backgroundColor: sc.back,
+      appBar: AppBar(
+        backgroundColor: sc.appbar,
+        title: const Text("練習モード（ランダム出題）", style: TextStyle(color: sc.text)),
+      ),
       body: ListView.separated(
         padding: const EdgeInsets.all(20),
         itemCount: categories.length,
@@ -62,16 +67,22 @@ class PracticeCategoryScreen extends StatelessWidget {
         itemBuilder: (context, index) {
           final cat = categories[index];
           return Card(
+            color: sc.card,
             elevation: 2,
             child: ListTile(
               title: Text(
                 cat["title"],
                 style: const TextStyle(
+                  color: sc.text,
                   fontSize: 17,
                   fontWeight: FontWeight.w500,
                 ),
               ),
-              trailing: const Icon(Icons.arrow_forward_ios, size: 18),
+              trailing: const Icon(
+                Icons.arrow_forward_ios,
+                size: 18,
+                color: sc.icon,
+              ),
               onTap: () {
                 if (cat["type"] == "trade") {
                   Navigator.push(
