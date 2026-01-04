@@ -21,7 +21,7 @@ class _PracticeTradeABScreenState extends State<PracticeTradeABScreen> {
   List<dynamic> questions = [];
   int current = 0;
 
-  String? selectedAnswer; // "A" / "B"
+  String? selectedAnswer;
   bool showExplanation = false;
   bool isLoading = true;
 
@@ -54,7 +54,7 @@ class _PracticeTradeABScreenState extends State<PracticeTradeABScreen> {
       showExplanation = true;
     });
 
-    Future.delayed(const Duration(milliseconds: 250), () {
+    Future.delayed(const Duration(milliseconds: 300), () {
       if (explanationKey.currentContext != null) {
         Scrollable.ensureVisible(
           explanationKey.currentContext!,
@@ -114,90 +114,122 @@ class _PracticeTradeABScreenState extends State<PracticeTradeABScreen> {
     final q = questions[current];
 
     return Scaffold(
-      appBar: AppBar(title: Text(widget.title)),
+      backgroundColor: Colors.grey.shade100,
+      appBar: AppBar(
+        title: Text(widget.title),
+        backgroundColor: Colors.blueGrey.shade900,
+      ),
       body: ListView(
         padding: const EdgeInsets.all(16),
         children: [
-          Text(
-            "Q${current + 1}. ${q["sentence"]}",
-            style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+          // --------------------
+          // 📘 問題カード
+          // --------------------
+          Card(
+            elevation: 4,
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(16),
+            ),
+            child: Padding(
+              padding: const EdgeInsets.all(16),
+              child: Text(
+                "Q${current + 1}. ${q["sentence"]}",
+                style: const TextStyle(
+                  fontSize: 20,
+                  fontWeight: FontWeight.bold,
+                  height: 1.5,
+                ),
+              ),
+            ),
           ),
 
-          const SizedBox(height: 20),
+          const SizedBox(height: 24),
 
-          // 🔵 A / B ボタン（ABC版UIそのまま！）
+          // --------------------
+          // A / B ボタン
+          // --------------------
           _choiceButton("A", q["optionA"]),
           const SizedBox(height: 12),
           _choiceButton("B", q["optionB"]),
 
-          const SizedBox(height: 30),
+          const SizedBox(height: 32),
 
           if (showExplanation) _buildExplanation(q),
 
-          const SizedBox(height: 30),
+          const SizedBox(height: 32),
 
           if (showExplanation)
             ElevatedButton(
               onPressed: nextQuestion,
               style: ElevatedButton.styleFrom(
                 backgroundColor: Colors.orange,
-                minimumSize: const Size(double.infinity, 48),
+                minimumSize: const Size(double.infinity, 56),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(16),
+                ),
               ),
-              child: Text(isLast ? "練習を終了する" : "次の問題へ"),
+              child: Text(
+                isLast ? "練習を終了する" : "次の問題へ",
+                style: const TextStyle(
+                  fontSize: 18,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
             ),
         ],
       ),
     );
   }
 
-  // ---------------------------------------------------------
-  // 🔵 ABC版UIを 2 択にそのまま流用したボタン
-  // ---------------------------------------------------------
+  // --------------------
+  // 🎯 選択ボタン（統一カラー）
+  // --------------------
   Widget _choiceButton(String key, String text) {
     final isSelected = selectedAnswer == key;
 
-    return AnimatedContainer(
-      duration: const Duration(milliseconds: 250),
-      curve: Curves.easeOut,
-      decoration: BoxDecoration(
-        color: isSelected ? Colors.blue.withOpacity(0.7) : Colors.grey[200],
-        borderRadius: BorderRadius.circular(12),
-        boxShadow: isSelected
-            ? [BoxShadow(color: Colors.blue.withOpacity(0.5), blurRadius: 12)]
-            : [],
-      ),
-      child: ElevatedButton(
-        onPressed: () => onSelect(key),
-        style: ElevatedButton.styleFrom(
-          backgroundColor: Colors.transparent,
-          shadowColor: Colors.transparent,
-          foregroundColor: Colors.black,
+    return GestureDetector(
+      onTap: () => onSelect(key),
+      child: AnimatedContainer(
+        duration: const Duration(milliseconds: 250),
+        curve: Curves.easeOut,
+        padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 12),
+        decoration: BoxDecoration(
+          color: isSelected ? Colors.blue : Colors.white,
+          borderRadius: BorderRadius.circular(16),
+          boxShadow: [
+            BoxShadow(
+              color: isSelected ? Colors.blue.withOpacity(0.4) : Colors.black12,
+              blurRadius: 12,
+              offset: const Offset(0, 6),
+            ),
+          ],
         ),
-        child: Padding(
-          padding: const EdgeInsets.symmetric(vertical: 14),
-          child: Row(
-            children: [
-              Icon(
-                isSelected ? Icons.circle : Icons.circle_outlined,
-                color: isSelected ? Colors.white : Colors.grey,
-              ),
-              const SizedBox(width: 12),
-              Expanded(
-                child: Text(
-                  "$key. $text",
-                  style: const TextStyle(fontSize: 16),
+        child: Row(
+          children: [
+            Icon(
+              isSelected ? Icons.radio_button_checked : Icons.radio_button_off,
+              color: isSelected ? Colors.white : Colors.grey,
+            ),
+            const SizedBox(width: 12),
+            Expanded(
+              child: Text(
+                "$key. $text",
+                style: TextStyle(
+                  fontSize: 16,
+                  color: isSelected ? Colors.white : Colors.black,
+                  fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
                 ),
               ),
-            ],
-          ),
+            ),
+          ],
         ),
       ),
     );
   }
 
-  // ---------------------------------------------------------
-  // 🔵 ABC版 UI を完全コピーした解説
-  // ---------------------------------------------------------
+  // --------------------
+  // 📖 解説エリア
+  // --------------------
   Widget _buildExplanation(Map<String, dynamic> q) {
     final correct = q["answer"];
     final isCorrect = selectedAnswer == correct;
@@ -206,8 +238,10 @@ class _PracticeTradeABScreenState extends State<PracticeTradeABScreen> {
       key: explanationKey,
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
-        color: isCorrect ? Colors.green.shade50 : Colors.red.shade50,
-        borderRadius: BorderRadius.circular(12),
+        color: isCorrect
+            ? Colors.green.withOpacity(0.1)
+            : Colors.red.withOpacity(0.1),
+        borderRadius: BorderRadius.circular(16),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -215,7 +249,7 @@ class _PracticeTradeABScreenState extends State<PracticeTradeABScreen> {
           Row(
             children: [
               Icon(
-                isCorrect ? Icons.circle : Icons.close,
+                isCorrect ? Icons.check_circle : Icons.cancel,
                 color: isCorrect ? Colors.green : Colors.red,
                 size: 28,
               ),
@@ -231,7 +265,7 @@ class _PracticeTradeABScreenState extends State<PracticeTradeABScreen> {
             ],
           ),
 
-          const SizedBox(height: 12),
+          const SizedBox(height: 16),
 
           Row(
             children: [
@@ -247,11 +281,11 @@ class _PracticeTradeABScreenState extends State<PracticeTradeABScreen> {
             ],
           ),
 
-          const SizedBox(height: 6),
+          const SizedBox(height: 8),
 
           Text(
             q["explanation"],
-            style: const TextStyle(fontSize: 16, height: 1.6),
+            style: const TextStyle(fontSize: 16, height: 1.8),
           ),
         ],
       ),

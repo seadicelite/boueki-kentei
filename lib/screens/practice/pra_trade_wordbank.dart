@@ -1,31 +1,30 @@
 import 'package:flutter/material.dart';
 import 'dart:convert';
 import 'package:flutter/services.dart';
+import 'dart:math';
 
-class PracticeTradePassageWordBankScreen extends StatefulWidget {
+class PracticeTradeBlank2Screen extends StatefulWidget {
   final String title;
   final String fileName;
 
-  const PracticeTradePassageWordBankScreen({
+  const PracticeTradeBlank2Screen({
     super.key,
     required this.title,
     required this.fileName,
   });
 
   @override
-  State<PracticeTradePassageWordBankScreen> createState() =>
-      _PracticeTradePassageWordBankScreenState();
+  State<PracticeTradeBlank2Screen> createState() =>
+      _PracticeTradeBlank2ScreenState();
 }
 
-class _PracticeTradePassageWordBankScreenState
-    extends State<PracticeTradePassageWordBankScreen> {
-  List<String> passage = [];
-  List<String> wordBank = [];
-  List<dynamic> questions = [];
+class _PracticeTradeBlank2ScreenState extends State<PracticeTradeBlank2Screen> {
+  List questions = [];
+  int current = 0;
 
-  Map<int, String> answers = {};
-  bool showExplanation = false;
-  bool isLoading = true;
+  String? selected1;
+  String? selected2;
+  bool answered = false;
 
   @override
   void initState() {
@@ -37,132 +36,149 @@ class _PracticeTradePassageWordBankScreenState
     final jsonString = await rootBundle.loadString(widget.fileName);
     final data = jsonDecode(jsonString);
 
+    List list = List.from(data["questions"]);
+    list.shuffle(Random());
+
     setState(() {
-      passage = List<String>.from(data["passage"]);
-      wordBank = List<String>.from(data["wordBank"]);
-      questions = data["questions"];
-      isLoading = false;
+      questions = list;
     });
   }
 
-  void checkAnswers() {
-    setState(() => showExplanation = true);
+  bool get isCorrect {
+    final q = questions[current];
+    return selected1 == q["answer1"] && selected2 == q["answer2"];
   }
 
   @override
   Widget build(BuildContext context) {
-    if (isLoading) {
+    if (questions.isEmpty) {
       return const Scaffold(body: Center(child: CircularProgressIndicator()));
     }
 
+    final q = questions[current];
+
     return Scaffold(
       appBar: AppBar(title: Text(widget.title)),
-      body: SingleChildScrollView(
+      body: ListView(
         padding: const EdgeInsets.all(16),
-        physics: showExplanation
-            ? const BouncingScrollPhysics()
-            : const NeverScrollableScrollPhysics(),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            _buildPassage(),
+        children: [
+          Text(
+            "Q${current + 1}",
+            style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+          ),
 
-            const SizedBox(height: 20),
+          const SizedBox(height: 16),
 
-            ElevatedButton(
-              onPressed: answers.length == questions.length
-                  ? checkAnswers
-                  : null,
-              child: const Text("回答を確定する"),
-            ),
+          _buildSentence(q),
 
-            const SizedBox(height: 30),
+          const SizedBox(height: 24),
 
-            if (showExplanation) _buildExplanation(),
-          ],
+          _buildDropdown(
+            label: "空欄①",
+            value: selected1,
+            items: q["choices"],
+            onChanged: (v) => setState(() => selected1 = v),
+          ),
+
+          const SizedBox(height: 16),
+
+          _buildDropdown(
+            label: "空欄②",
+            value: selected2,
+            items: q["choices"],
+            onChanged: (v) => setState(() => selected2 = v),
+          ),
+
+          const SizedBox(height: 32),
+
+          ElevatedButton(
+            onPressed: (selected1 != null && selected2 != null && !answered)
+                ? () => setState(() => answered = true)
+                : null,
+            child: const Text("解答する"),
+          ),
+
+          const SizedBox(height: 24),
+
+          if (answered) _buildExplanation(q),
+        ],
+      ),
+    );
+  }
+
+  // ----------------------------
+  // 問題文（①②を強調）
+  // ----------------------------
+  Widget _buildSentence(Map q) {
+    return Text(
+      q["sentence"],
+      style: const TextStyle(fontSize: 18, height: 1.6),
+    );
+  }
+
+  // ----------------------------
+  // ドロップダウン
+  // ----------------------------
+  Widget _buildDropdown({
+    required String label,
+    required String? value,
+    required List items,
+    required ValueChanged<String?> onChanged,
+  }) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(label, style: const TextStyle(fontWeight: FontWeight.bold)),
+        const SizedBox(height: 6),
+        DropdownButtonFormField<String>(
+          value: value,
+          items: items
+              .map<DropdownMenuItem<String>>(
+                (e) => DropdownMenuItem(value: e, child: Text(e)),
+              )
+              .toList(),
+          onChanged: answered ? null : onChanged,
+          decoration: const InputDecoration(border: OutlineInputBorder()),
         ),
+      ],
+    );
+  }
+
+  // ----------------------------
+  // 解説
+  // ----------------------------
+  Widget _buildExplanation(Map q) {
+    return Container(
+      padding: const EdgeInsets.all(16),
+      decoration: BoxDecoration(
+        color: isCorrect
+            ? Colors.green.withOpacity(0.1)
+            : Colors.red.withOpacity(0.1),
+        borderRadius: BorderRadius.circular(12),
       ),
-    );
-  }
-
-  Widget _buildPassage() {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: passage.map((text) {
-        return Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [..._replaceBlanks(text), const SizedBox(height: 20)],
-        );
-      }).toList(),
-    );
-  }
-
-  /// ( ① ) → ドロップダウンに置換
-  List<Widget> _replaceBlanks(String text) {
-    final regex = RegExp(r'（\s*([①-⑩])\s*）');
-    final List<Widget> widgets = [];
-
-    int lastIndex = 0;
-    int blankCount = 1;
-
-    for (final match in regex.allMatches(text)) {
-      final beforeText = text.substring(lastIndex, match.start);
-      widgets.add(Text(beforeText, style: const TextStyle(fontSize: 16)));
-
-      final number = blankCount;
-      widgets.add(_buildDropdown(number));
-
-      blankCount++;
-      lastIndex = match.end;
-    }
-
-    widgets.add(
-      Text(text.substring(lastIndex), style: const TextStyle(fontSize: 16)),
-    );
-
-    return widgets;
-  }
-
-  Widget _buildDropdown(int number) {
-    return DropdownButtonHideUnderline(
-      child: DropdownButton<String>(
-        value: answers[number],
-        hint: Text("(${number.toString().padLeft(2, '0')}) 選択"),
-        items: wordBank.map((word) {
-          return DropdownMenuItem(value: word, child: Text(word));
-        }).toList(),
-        onChanged: showExplanation
-            ? null
-            : (value) => setState(() => answers[number] = value!),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            isCorrect ? "正解！" : "不正解…",
+            style: TextStyle(
+              fontSize: 20,
+              fontWeight: FontWeight.bold,
+              color: isCorrect ? Colors.green : Colors.red,
+            ),
+          ),
+          const SizedBox(height: 12),
+          Text(
+            "正解：① ${q["answer1"]} ／ ② ${q["answer2"]}",
+            style: const TextStyle(fontSize: 16),
+          ),
+          const SizedBox(height: 8),
+          Text(
+            q["explanation"],
+            style: const TextStyle(fontSize: 16, height: 1.6),
+          ),
+        ],
       ),
-    );
-  }
-
-  Widget _buildExplanation() {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: questions.map((q) {
-        final number = q["number"];
-        final userAnswer = answers[number];
-        final correct = q["answer"];
-        final isCorrect = userAnswer == correct;
-
-        return Container(
-          margin: const EdgeInsets.only(bottom: 14),
-          padding: const EdgeInsets.all(12),
-          decoration: BoxDecoration(
-            color: isCorrect ? Colors.green.shade50 : Colors.red.shade50,
-            borderRadius: BorderRadius.circular(10),
-          ),
-          child: Text(
-            "（$number） ${isCorrect ? "正解" : "不正解"}\n"
-            "あなたの回答：$userAnswer\n"
-            "正解：$correct\n\n"
-            "${q["explanation"]}",
-            style: const TextStyle(fontSize: 14),
-          ),
-        );
-      }).toList(),
     );
   }
 }

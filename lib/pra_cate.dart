@@ -108,7 +108,7 @@ class PracticeCategoryScreen extends StatelessWidget {
                   Navigator.push(
                     context,
                     MaterialPageRoute(
-                      builder: (_) => PracticeTradePassageWordBankScreen(
+                      builder: (_) => PracticeTradeBlank2Screen(
                         title: cat["title"],
                         fileName: cat["file"],
                       ),

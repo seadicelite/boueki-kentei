@@ -1,26 +1,44 @@
 {
-  "passage": [
-    "（1）国内PL保険…有体物である工業製品、（ ① ）等…部品、（ ② ）も対象…（ ③ ）責任という。",
-    "（2）インコタームズは（ ④ ）が定め、2020年版の使用は（ ⑤ ）。費用負担と危険負担は原則（ ⑥ ）だが、CFR/CIF/CPT/CIPは（ ⑦ ）。",
-    "（3）混載業者が航空会社から受け取る運送状は（ ⑧ ）、荷主に発行する運送状は（ ⑨ ）。信用状取引では輸入者は（ ⑩ ）を発行してもらう。"
-  ],
-  "wordBank": [
-    "積戻し", "House Air Waybill", "同一", "経済産業大臣", "Blank Endorsement",
-    "農水産物", "電気", "申請手続", "D/D", "On Board Notation",
-    "自由", "ISO", "拡大生産者", "義務", "市場", "Release Order",
-    "P/P", "Master Air Waybill", "異なる", "原材料", "無過失", "製造物", "熱"
-  ],
   "questions": [
-    { "number": 1, "answer": "農水産物", "explanation": "…" },
-    { "number": 2, "answer": "原材料", "explanation": "…" },
-    { "number": 3, "answer": "製造物", "explanation": "…" },
-    { "number": 4, "answer": "ISO", "explanation": "…" },
-    { "number": 5, "answer": "自由", "explanation": "…" },
-    { "number": 6, "answer": "同一", "explanation": "…" },
-    { "number": 7, "answer": "異なる", "explanation": "…" },
-    { "number": 8, "answer": "Master Air Waybill", "explanation": "…" },
-    { "number": 9, "answer": "House Air Waybill", "explanation": "…" },
-    { "number": 10, "answer": "Release Order", "explanation": "…" }
+    {
+      "sentence": "貿易取引において、売主が貨物を本船に積み込むまでの費用と危険を負担する条件を【①】といい、運賃および保険料を含めて売主が負担する条件を【②】という。",
+      "choices": [
+        "FOB",
+        "CIF",
+        "EXW",
+        "FCA",
+        "DDP"
+      ],
+      "answer1": "FOB",
+      "answer2": "CIF",
+      "explanation": "FOBは本船渡し条件で、売主は本船に積み込むまでの費用と危険を負担する。CIFは運賃および保険料込み条件である。"
+    },
+    {
+      "sentence": "売主が指定場所まで貨物を引き渡すが輸出通関は行わない条件を【①】といい、売主が輸入関税を含めすべての費用と危険を負担する条件を【②】という。",
+      "choices": [
+        "EXW",
+        "DDP",
+        "DAP",
+        "CPT",
+        "FAS"
+      ],
+      "answer1": "EXW",
+      "answer2": "DDP",
+      "explanation": "EXWは工場渡し条件で輸出通関義務は売主にない。DDPは関税込持込渡し条件で、売主が最大の義務を負う。"
+    },
+    {
+      "sentence": "売主が本船の横に貨物を据え付けるまでを負担する条件を【①】といい、運送人に引き渡した時点で危険が移転する条件を【②】という。",
+      "choices": [
+        "FAS",
+        "FCA",
+        "FOB",
+        "CFR",
+        "CIP"
+      ],
+      "answer1": "FAS",
+      "answer2": "FCA",
+      "explanation": "FASは本船横渡し条件で、FCAは運送人渡し条件である。"
+    }
   ]
 }
 
