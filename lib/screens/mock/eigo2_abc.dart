@@ -6,7 +6,7 @@ import 'package:flutter/services.dart';
 class EnglishThreeChoiceScreen extends StatefulWidget {
   final String title;
   final String fileName;
-  final int limit; // ランダム出題数（10）
+  final int limit;
   final Function(List<Map<String, dynamic>>, double) onComplete;
 
   const EnglishThreeChoiceScreen({
@@ -23,13 +23,19 @@ class EnglishThreeChoiceScreen extends StatefulWidget {
 }
 
 class _EnglishThreeChoiceScreenState extends State<EnglishThreeChoiceScreen> {
+  // =============================
+  // ChatGPT風カラー
+  // =============================
+  static const bgColor = Color(0xFF0F0F0F);
+  static const cardColor = Color(0xFF1E1E1E);
+  static const accentColor = Color(0xFF10A37F);
+  static const textColor = Colors.white;
+  static const subTextColor = Colors.grey;
+
   List<dynamic> questions = [];
 
   int current = 0;
   bool loading = true;
-
-  String? selected;
-  bool showExplanation = false;
 
   final List<Map<String, dynamic>> answerLog = [];
 
@@ -46,132 +52,122 @@ class _EnglishThreeChoiceScreenState extends State<EnglishThreeChoiceScreen> {
     List<dynamic> list = List.from(data["questions"]);
     list.shuffle(Random());
 
-    // ランダムで10問
     questions = list.take(widget.limit).toList();
-
     setState(() => loading = false);
   }
 
+  // =============================
+  // 回答処理（即次へ）
+  // =============================
   void selectAnswer(String key) {
-    if (showExplanation) return;
-
     final q = questions[current];
-    final correct = q["answer"];
-    final isCorrect = (key == correct);
-
-    selected = key;
-    showExplanation = true;
+    final correctKey = q["answer"];
+    final isCorrect = key == correctKey;
 
     answerLog.add({
-      "sentence": q["sentence"],
-      "user": key,
-      "correct": isCorrect,
-      "points": isCorrect ? 1.0 : 0.0,
-      "correctAnswer": correct,
-      "options": {"A": q["A"], "B": q["B"], "C": q["C"]},
-      "explanation": q["explanation"],
+      // ResultScreenEigo 対応キー
+      "question": q["sentence_en"],
+      "sentence": null,
+      "selected": "$key. ${q["option${key}_jp"]}",
+      "correct": "$correctKey. ${q["option${correctKey}_jp"]}",
+      "isCorrect": isCorrect,
+      "points": isCorrect ? 2.0 : 0.0,
+      "explanation": null,
     });
 
-    setState(() {});
-  }
-
-  void next() {
     if (current + 1 < questions.length) {
-      setState(() {
-        current++;
-        selected = null;
-        showExplanation = false;
-      });
+      setState(() => current++);
     } else {
-      // 大問終了
       final score = answerLog.fold<double>(0, (s, e) => s + e["points"]);
       widget.onComplete(answerLog, score);
     }
   }
 
-  bool get isLast => current == questions.length - 1;
-
   @override
   Widget build(BuildContext context) {
     if (loading) {
-      return const Scaffold(body: Center(child: CircularProgressIndicator()));
+      return const Scaffold(
+        backgroundColor: bgColor,
+        body: Center(child: CircularProgressIndicator(color: accentColor)),
+      );
     }
 
     final q = questions[current];
 
     return Scaffold(
-      appBar: AppBar(title: Text(widget.title)),
+      backgroundColor: bgColor,
+      appBar: AppBar(
+        backgroundColor: bgColor,
+        elevation: 0,
+        centerTitle: true,
+        title: Text(widget.title, style: const TextStyle(color: textColor)),
+      ),
       body: Padding(
         padding: const EdgeInsets.all(16),
-        child: SingleChildScrollView(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              // 🔵 問題文
-              Text(
-                "Q${current + 1}. ${q["sentence"]}",
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            // 進捗バー
+            LinearProgressIndicator(
+              value: (current + 1) / questions.length,
+              backgroundColor: Colors.grey[800],
+              valueColor: const AlwaysStoppedAnimation(accentColor),
+            ),
+
+            const SizedBox(height: 24),
+
+            // 問題カード
+            Container(
+              padding: const EdgeInsets.all(16),
+              decoration: BoxDecoration(
+                color: cardColor,
+                borderRadius: BorderRadius.circular(16),
+              ),
+              child: Text(
+                "Q${current + 1}. ${q["sentence_en"]}",
                 style: const TextStyle(
                   fontSize: 20,
                   fontWeight: FontWeight.bold,
+                  color: textColor,
                 ),
               ),
+            ),
 
-              const SizedBox(height: 24),
+            const SizedBox(height: 24),
 
-              _buildChoiceButton("A", q["A"]),
-              const SizedBox(height: 12),
-              _buildChoiceButton("B", q["B"]),
-              const SizedBox(height: 12),
-              _buildChoiceButton("C", q["C"]),
-
-              const SizedBox(height: 30),
-
-              if (showExplanation) _buildExplanation(q),
-              if (showExplanation) const SizedBox(height: 16),
-
-              if (showExplanation)
-                ElevatedButton(
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.orange,
-                    minimumSize: const Size(double.infinity, 48),
-                  ),
-                  onPressed: next,
-                  child: Text(isLast ? "大問を終了する" : "次の問題へ"),
-                ),
-            ],
-          ),
+            _buildChoiceButton("A", q["optionA_jp"]),
+            const SizedBox(height: 12),
+            _buildChoiceButton("B", q["optionB_jp"]),
+            const SizedBox(height: 12),
+            _buildChoiceButton("C", q["optionC_jp"]),
+          ],
         ),
       ),
     );
   }
 
-  // ---------------------------------------------------------
-  // 🔵 3択ボタン
-  // ---------------------------------------------------------
+  // =============================
+  // 3択ボタン（試験モード）
+  // =============================
   Widget _buildChoiceButton(String key, String text) {
-    final isSelected = selected == key;
-
-    return AnimatedContainer(
-      duration: const Duration(milliseconds: 200),
+    return Container(
       decoration: BoxDecoration(
-        color: isSelected ? Colors.blueAccent : Colors.grey[200],
+        color: cardColor,
         borderRadius: BorderRadius.circular(12),
+        border: Border.all(color: subTextColor),
       ),
       child: ElevatedButton(
         onPressed: () => selectAnswer(key),
         style: ElevatedButton.styleFrom(
           backgroundColor: Colors.transparent,
           shadowColor: Colors.transparent,
-          foregroundColor: isSelected ? Colors.white : Colors.black,
+          foregroundColor: textColor,
         ),
         child: Padding(
           padding: const EdgeInsets.symmetric(vertical: 14),
           child: Row(
             children: [
-              Icon(
-                isSelected ? Icons.radio_button_checked : Icons.circle_outlined,
-                color: isSelected ? Colors.white : Colors.grey,
-              ),
+              const Icon(Icons.circle_outlined, color: textColor),
               const SizedBox(width: 10),
               Expanded(
                 child: Text(
@@ -182,59 +178,6 @@ class _EnglishThreeChoiceScreenState extends State<EnglishThreeChoiceScreen> {
             ],
           ),
         ),
-      ),
-    );
-  }
-
-  // ---------------------------------------------------------
-  // 🔵 解説
-  // ---------------------------------------------------------
-  Widget _buildExplanation(Map<String, dynamic> q) {
-    final correct = q["answer"];
-    final isCorrect = selected == correct;
-
-    return Container(
-      padding: const EdgeInsets.all(16),
-      decoration: BoxDecoration(
-        color: isCorrect ? Colors.green.shade50 : Colors.red.shade50,
-        borderRadius: BorderRadius.circular(12),
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Row(
-            children: [
-              Icon(
-                isCorrect ? Icons.circle : Icons.close,
-                color: isCorrect ? Colors.green : Colors.red,
-                size: 28,
-              ),
-              const SizedBox(width: 8),
-              Text(
-                isCorrect ? "正解！" : "不正解…",
-                style: TextStyle(
-                  fontSize: 20,
-                  fontWeight: FontWeight.bold,
-                  color: isCorrect ? Colors.green : Colors.red,
-                ),
-              ),
-            ],
-          ),
-
-          const SizedBox(height: 12),
-
-          Text(
-            "正解：$correct → ${q[correct]}",
-            style: const TextStyle(fontSize: 16, color: Colors.blue),
-          ),
-
-          const SizedBox(height: 8),
-
-          Text(
-            q["explanation"],
-            style: const TextStyle(fontSize: 16, height: 1.6),
-          ),
-        ],
       ),
     );
   }

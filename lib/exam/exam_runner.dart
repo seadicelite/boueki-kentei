@@ -163,7 +163,7 @@ class _MockExamRunnerState extends State<MockExamRunner> {
         return MockTradeDai3WordbankScreen(
           title: title,
           fileName: file,
-          limit: limit,
+
           onComplete: onSectionComplete,
         );
 
@@ -191,10 +191,8 @@ class _MockExamRunnerState extends State<MockExamRunner> {
         );
 
       case "english_img_group":
-        return PracticeTradeImageGroupABCScreen(
+        return PracticeEigoImageABCScreen(
           title: title,
-          fileName: file,
-          limit: limit,
           onComplete: onSectionComplete,
         );
 
@@ -209,9 +207,6 @@ class _MockExamRunnerState extends State<MockExamRunner> {
   Widget build(BuildContext context) {
     final currentSection = widget.sections[currentIndex];
 
-    return Scaffold(
-      appBar: AppBar(title: Text(widget.examTitle), centerTitle: true),
-      body: SafeArea(child: buildSectionScreen(currentSection)),
-    );
+    return Scaffold(body: SafeArea(child: buildSectionScreen(currentSection)));
   }
 }

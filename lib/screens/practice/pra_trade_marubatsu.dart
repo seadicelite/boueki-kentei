@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'dart:convert';
 import 'package:flutter/services.dart';
 import 'dart:math';
-import 'package:boueki_kentei/core/colors.dart';
 
 class PracticeTradeMarubatsuScreen extends StatefulWidget {
   final String title;
@@ -28,15 +27,10 @@ class _PracticeTradeMarubatsuScreenState
   bool? selectedAnswer;
   final explanationKey = GlobalKey();
 
-  // -----------------------------
-  // 🔀 問題ランダム化
-  // -----------------------------
-  List<dynamic> shuffleQuestions(List<dynamic> list) {
-    final random = Random();
-    final newList = List<dynamic>.from(list);
-    newList.shuffle(random);
-    return newList;
-  }
+  // 🎨 ChatGPT風カラー
+  static const bgColor = Color(0xFF0F0F0F);
+  static const cardColor = Color(0xFF1E1E1E);
+  static const accentColor = Color(0xFF10A37F);
 
   @override
   void initState() {
@@ -46,22 +40,77 @@ class _PracticeTradeMarubatsuScreenState
 
   Future<void> loadQuestions() async {
     final jsonString = await rootBundle.loadString(widget.fileName);
-    final data = json.decode(jsonString);
+    final data = jsonDecode(jsonString);
+
+    List list = List.from(data["questions"]);
+    list.shuffle(Random());
 
     setState(() {
-      questions = shuffleQuestions(data["questions"]);
+      questions = list;
     });
   }
 
+  bool get isLast => currentIndex == questions.length - 1;
+
+  void nextQuestion() {
+    if (!isLast) {
+      setState(() {
+        currentIndex++;
+        answered = false;
+        selectedAnswer = null;
+      });
+    } else {
+      showEndDialog();
+    }
+  }
+
+  void showEndDialog() {
+    showDialog(
+      context: context,
+      builder: (_) => AlertDialog(
+        backgroundColor: cardColor,
+        title: const Text("終了", style: TextStyle(color: Colors.white)),
+        content: const Text(
+          "すべての問題を解きました。",
+          style: TextStyle(color: Colors.white70),
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context),
+            child: const Text("閉じる"),
+          ),
+          TextButton(
+            onPressed: () {
+              Navigator.pop(context);
+              setState(() {
+                currentIndex = 0;
+                answered = false;
+                selectedAnswer = null;
+              });
+            },
+            child: const Text("もう一度"),
+          ),
+        ],
+      ),
+    );
+  }
+
   // -----------------------------
-  // ○×ボタン（UI改善版）
+  // ○ × ボタン（ChatGPT風）
   // -----------------------------
-  Widget answerButton({
-    required bool value,
-    required String label,
-    required Color activeColor,
-  }) {
+  Widget answerButton({required bool value, required String label}) {
     final isSelected = selectedAnswer == value;
+
+    Color bg;
+    if (!answered) {
+      bg = isSelected ? accentColor : cardColor;
+    } else if (value == questions[currentIndex]["answer"]) {
+      bg = Colors.green.shade700;
+    } else if (isSelected) {
+      bg = Colors.red.shade700;
+    } else {
+      bg = cardColor;
+    }
 
     return GestureDetector(
       onTap: answered
@@ -73,10 +122,12 @@ class _PracticeTradeMarubatsuScreenState
               });
 
               Future.delayed(const Duration(milliseconds: 300), () {
-                Scrollable.ensureVisible(
-                  explanationKey.currentContext!,
-                  duration: const Duration(milliseconds: 400),
-                );
+                if (explanationKey.currentContext != null) {
+                  Scrollable.ensureVisible(
+                    explanationKey.currentContext!,
+                    duration: const Duration(milliseconds: 400),
+                  );
+                }
               });
             },
       child: AnimatedContainer(
@@ -84,25 +135,16 @@ class _PracticeTradeMarubatsuScreenState
         curve: Curves.easeOut,
         padding: const EdgeInsets.symmetric(vertical: 18),
         decoration: BoxDecoration(
-          color: isSelected ? activeColor : Colors.grey.shade300,
+          color: bg,
           borderRadius: BorderRadius.circular(16),
-          boxShadow: isSelected
-              ? [
-                  BoxShadow(
-                    color: activeColor.withOpacity(0.5),
-                    blurRadius: 16,
-                    offset: const Offset(0, 6),
-                  ),
-                ]
-              : [],
         ),
         child: Center(
           child: Text(
             label,
-            style: TextStyle(
+            style: const TextStyle(
               fontSize: 18,
               fontWeight: FontWeight.bold,
-              color: isSelected ? Colors.white : Colors.black,
+              color: Colors.white,
             ),
           ),
         ),
@@ -113,26 +155,28 @@ class _PracticeTradeMarubatsuScreenState
   @override
   Widget build(BuildContext context) {
     if (questions.isEmpty) {
-      return const Scaffold(body: Center(child: CircularProgressIndicator()));
+      return const Scaffold(
+        backgroundColor: bgColor,
+        body: Center(child: CircularProgressIndicator(color: accentColor)),
+      );
     }
 
     final q = questions[currentIndex];
 
     return Scaffold(
-      backgroundColor: sc.back,
+      backgroundColor: bgColor,
       appBar: AppBar(
-        title: Text(widget.title, style: TextStyle(color: sc.text)),
-        backgroundColor: sc.appbar,
+        title: Text(widget.title),
+        backgroundColor: bgColor,
+        foregroundColor: Colors.white,
+        elevation: 0,
       ),
       body: ListView(
         padding: const EdgeInsets.all(16),
         children: [
-          // -----------------------------
           // 📘 問題カード
-          // -----------------------------
           Card(
-            color: sc.card,
-            elevation: 4,
+            color: cardColor,
             shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(16),
             ),
@@ -140,10 +184,10 @@ class _PracticeTradeMarubatsuScreenState
               padding: const EdgeInsets.all(16),
               child: Text(
                 "Q${currentIndex + 1}. ${q["question"]}",
-                style: TextStyle(
+                style: const TextStyle(
                   fontSize: 20,
                   fontWeight: FontWeight.bold,
-                  color: sc.text,
+                  color: Colors.white,
                   height: 1.5,
                 ),
               ),
@@ -152,34 +196,39 @@ class _PracticeTradeMarubatsuScreenState
 
           const SizedBox(height: 24),
 
-          // -----------------------------
           // ○ × ボタン
-          // -----------------------------
           Row(
             children: [
-              Expanded(
-                child: answerButton(
-                  value: true,
-
-                  label: "○ 正しい",
-                  activeColor: Colors.grey,
-                ),
-              ),
+              Expanded(child: answerButton(value: true, label: "○ 正しい")),
               const SizedBox(width: 12),
-              Expanded(
-                child: answerButton(
-                  value: false,
-                  label: "× 誤り",
-
-                  activeColor: Colors.grey,
-                ),
-              ),
+              Expanded(child: answerButton(value: false, label: "× 誤り")),
             ],
           ),
 
           const SizedBox(height: 32),
 
           if (answered) _buildExplanation(q),
+
+          if (answered) ...[
+            const SizedBox(height: 32),
+            ElevatedButton(
+              onPressed: nextQuestion,
+              style: ElevatedButton.styleFrom(
+                backgroundColor: accentColor,
+                minimumSize: const Size(double.infinity, 56),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(16),
+                ),
+              ),
+              child: Text(
+                isLast ? "練習を終了する" : "次の問題へ",
+                style: const TextStyle(
+                  fontSize: 18,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+            ),
+          ],
         ],
       ),
     );
@@ -191,20 +240,18 @@ class _PracticeTradeMarubatsuScreenState
   Widget _buildExplanation(Map q) {
     final bool isCorrect = q["answer"] == selectedAnswer;
 
-    return Column(
+    return Container(
       key: explanationKey,
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        // 正解・不正解表示
-        Container(
-          padding: const EdgeInsets.all(16),
-          decoration: BoxDecoration(
-            color: isCorrect
-                ? Colors.green.withOpacity(0.1)
-                : Colors.red.withOpacity(0.1),
-            borderRadius: BorderRadius.circular(16),
-          ),
-          child: Row(
+      padding: const EdgeInsets.all(16),
+      decoration: BoxDecoration(
+        color: cardColor,
+        borderRadius: BorderRadius.circular(16),
+        border: Border.all(color: isCorrect ? Colors.green : Colors.red),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
             children: [
               Icon(
                 isCorrect ? Icons.check_circle : Icons.cancel,
@@ -222,64 +269,26 @@ class _PracticeTradeMarubatsuScreenState
               ),
             ],
           ),
-        ),
-
-        const SizedBox(height: 24),
-
-        // 解説ヘッダ
-        Row(
-          children: [
-            const Text(
-              "【解説】",
-              style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-            ),
-            const SizedBox(width: 8),
-            Text(
-              q["answer"] ? "（正解：○）" : "（正解：×）",
-              style: const TextStyle(fontSize: 18, color: Colors.blue),
-            ),
-          ],
-        ),
-
-        const SizedBox(height: 8),
-
-        // 解説本文
-        Text(
-          q["explanation"],
-          style: TextStyle(fontSize: 16, height: 1.8, color: sc.text),
-        ),
-
-        const SizedBox(height: 32),
-
-        // 次へボタン
-        if (currentIndex < questions.length - 1)
-          ElevatedButton(
-            onPressed: () {
-              setState(() {
-                currentIndex++;
-                answered = false;
-                selectedAnswer = null;
-              });
-            },
-            style: ElevatedButton.styleFrom(
-              backgroundColor: Colors.orange,
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(16),
-              ),
-              minimumSize: const Size(double.infinity, 56),
-            ),
-            child: const Text(
-              "次の問題へ",
-              style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+          const SizedBox(height: 12),
+          Text(
+            q["answer"] ? "（正解：○）" : "（正解：×）",
+            style: const TextStyle(
+              fontSize: 16,
+              fontWeight: FontWeight.bold,
+              color: accentColor,
             ),
           ),
-
-        if (currentIndex == questions.length - 1)
-          const Text(
-            "これで全ての問題が終了です！",
-            style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+          const SizedBox(height: 8),
+          Text(
+            q["explanation"],
+            style: const TextStyle(
+              fontSize: 16,
+              height: 1.8,
+              color: Colors.white70,
+            ),
           ),
-      ],
+        ],
+      ),
     );
   }
 }

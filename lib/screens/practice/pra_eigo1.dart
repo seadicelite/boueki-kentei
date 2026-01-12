@@ -3,7 +3,9 @@ import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
+/// ================================
 /// 単語データモデル
+/// ================================
 class Term {
   final int id;
   final String termEn;
@@ -20,11 +22,13 @@ class Term {
   }
 }
 
-/// 大問1 英単語 → 日本語 選択問題（語群・マッチング）
+/// ================================
+/// ChatGPT風 英単語マッチング
+/// ================================
 class PracticeEigo1Screen extends StatefulWidget {
   final String title;
   final String fileName;
-  final int limit; // 1セット5問（模試用で可変）
+  final int limit;
   final Function(List<Map<String, dynamic>>, double)? onComplete;
 
   const PracticeEigo1Screen({
@@ -40,10 +44,14 @@ class PracticeEigo1Screen extends StatefulWidget {
 }
 
 class _PracticeEigo1ScreenState extends State<PracticeEigo1Screen> {
+  // 🎨 ChatGPT風カラー
+  static const bgColor = Color(0xFF0F0F0F);
+  static const cardColor = Color(0xFF1E1E1E);
+  static const accentColor = Color(0xFF10A37F);
+
   List<Term> allTerms = [];
   List<Term> questions = [];
   List<String> wordPool = [];
-
   Map<int, String> userAnswers = {};
 
   bool loading = true;
@@ -54,244 +62,151 @@ class _PracticeEigo1ScreenState extends State<PracticeEigo1Screen> {
     loadAndPrepare();
   }
 
-  // ======================================
-  // JSONロード → 問題と語群作成
-  // ======================================
   Future<void> loadAndPrepare() async {
     await loadTerms();
-    generateTest(); // 一発目の問題セット
+    generateTest();
   }
 
   Future<void> loadTerms() async {
     final jsonStr = await rootBundle.loadString(widget.fileName);
     final list = jsonDecode(jsonStr);
-
     allTerms = list.map<Term>((e) => Term.fromJson(e)).toList();
     loading = false;
   }
 
-  // ======================================
-  // 5問と語群10個作成
-  // ======================================
   void generateTest() {
-    List<Term> shuffled = List.from(allTerms)..shuffle(Random());
-
+    final shuffled = List<Term>.from(allTerms)..shuffle(Random());
     questions = shuffled.take(widget.limit).toList();
 
-    List<String> correct = questions.map((e) => e.termJp).toList();
-
-    List<String> dummy =
+    final correct = questions.map((e) => e.termJp).toList();
+    final dummy =
         allTerms
             .map((e) => e.termJp)
             .where((jp) => !correct.contains(jp))
             .toList()
           ..shuffle(Random());
 
-    dummy = dummy.take(widget.limit).toList();
-
-    wordPool = [...correct, ...dummy]..shuffle(Random());
-
+    wordPool = [...correct, ...dummy.take(widget.limit)]..shuffle(Random());
     userAnswers.clear();
-
     setState(() {});
   }
 
-  // ======================================
-  // 採点
-  // ======================================
   void scoreTest() {
     int score = 0;
+    List<Map<String, dynamic>> logs = [];
 
-    List<Map<String, dynamic>> answerLog = [];
-
-    for (var q in questions) {
+    for (final q in questions) {
       final selected = userAnswers[q.id];
-      final correct = q.termJp;
-      final isCorrect = selected == correct;
-
+      final isCorrect = selected == q.termJp;
       if (isCorrect) score++;
 
-      answerLog.add({
+      logs.add({
         "question": q.termEn,
         "selected": selected ?? "未回答",
-        "correct": correct,
+        "correct": q.termJp,
         "points": isCorrect ? 1.0 : 0.0,
         "isCorrect": isCorrect,
         "explanation": "",
       });
     }
 
-    // ------ Runner へ返す場合 ------
     if (widget.onComplete != null) {
-      widget.onComplete!(answerLog, score.toDouble());
+      widget.onComplete!(logs, score.toDouble());
       return;
     }
 
-    // ------ 練習画面の場合 → BottomSheet ------
-    showResultSheet(score, answerLog);
+    showResultSheet(score);
   }
 
-  // ======================================
-  // 結果 BottomSheet
-  // ======================================
-  void showResultSheet(int score, List<Map<String, dynamic>> logs) {
+  /// ================================
+  /// 結果 BottomSheet（ChatGPT風）
+  /// ================================
+  void showResultSheet(int score) {
     showModalBottomSheet(
       context: context,
-      isScrollControlled: true,
       backgroundColor: Colors.transparent,
+      isScrollControlled: true,
       builder: (_) {
-        return DraggableScrollableSheet(
-          initialChildSize: 0.85,
-          minChildSize: 0.5,
-          builder: (_, controller) {
-            return Container(
-              padding: const EdgeInsets.all(20),
-              decoration: BoxDecoration(
-                color: Colors.white,
-                borderRadius: const BorderRadius.vertical(
-                  top: Radius.circular(28),
+        return Container(
+          height: MediaQuery.of(context).size.height * 0.85,
+          padding: const EdgeInsets.all(20),
+          decoration: const BoxDecoration(
+            color: bgColor,
+            borderRadius: BorderRadius.vertical(top: Radius.circular(28)),
+          ),
+          child: Column(
+            children: [
+              Text(
+                "$score / ${widget.limit}",
+                style: TextStyle(
+                  fontSize: 40,
+                  fontWeight: FontWeight.bold,
+                  color: score >= widget.limit / 2
+                      ? accentColor
+                      : Colors.redAccent,
                 ),
               ),
-              child: Column(
-                children: [
-                  // ★ スコアバッジ
-                  Container(
-                    padding: const EdgeInsets.all(28),
-                    decoration: BoxDecoration(
-                      shape: BoxShape.circle,
-                      color: score >= (widget.limit / 2)
-                          ? Colors.green.shade100
-                          : Colors.red.shade100,
-                    ),
-                    child: Column(
-                      children: [
-                        Text(
-                          "$score / ${widget.limit}",
-                          style: TextStyle(
-                            fontSize: 38,
-                            fontWeight: FontWeight.bold,
-                            color: score >= (widget.limit / 2)
-                                ? Colors.green.shade800
-                                : Colors.red.shade800,
-                          ),
-                        ),
-                        const SizedBox(height: 4),
-                        Text(
-                          score >= (widget.limit / 2)
-                              ? "Good Job!"
-                              : "Try Again!",
-                          style: TextStyle(
-                            fontSize: 16,
-                            color: Colors.grey.shade700,
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-
-                  const SizedBox(height: 12),
-
-                  // ★ 問題リスト
-                  Expanded(
-                    child: ListView.builder(
-                      controller: controller,
-                      itemCount: questions.length,
-                      itemBuilder: (_, index) {
-                        final q = questions[index];
-                        final selected = userAnswers[q.id];
-                        final isCorrect = selected == q.termJp;
-
-                        return Container(
-                          margin: const EdgeInsets.symmetric(vertical: 8),
-                          padding: const EdgeInsets.all(14),
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(16),
-                            color: Colors.white,
-                            boxShadow: [
-                              BoxShadow(
-                                blurRadius: 6,
-                                offset: const Offset(0, 3),
-                                color: Colors.black12,
-                              ),
-                            ],
-                          ),
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text(
-                                q.termEn,
-                                style: const TextStyle(
-                                  fontSize: 20,
-                                  fontWeight: FontWeight.bold,
-                                ),
-                              ),
-
-                              const SizedBox(height: 8),
-
-                              Row(
-                                children: [
-                                  Container(
-                                    padding: const EdgeInsets.symmetric(
-                                      vertical: 4,
-                                      horizontal: 10,
-                                    ),
-                                    decoration: BoxDecoration(
-                                      borderRadius: BorderRadius.circular(8),
-                                      color: isCorrect
-                                          ? Colors.green.shade100
-                                          : Colors.red.shade100,
-                                    ),
-                                    child: Row(
-                                      children: [
-                                        Icon(
-                                          isCorrect ? Icons.check : Icons.close,
-                                          color: isCorrect
-                                              ? Colors.green
-                                              : Colors.red,
-                                        ),
-                                        const SizedBox(width: 6),
-                                        Text(
-                                          selected ?? "未回答",
-                                          style: TextStyle(
-                                            fontWeight: FontWeight.bold,
-                                            color: isCorrect
-                                                ? Colors.green.shade900
-                                                : Colors.red.shade900,
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                  ),
-                                ],
-                              ),
-
-                              const SizedBox(height: 8),
-                              Text(
-                                "正解: ${q.termJp}",
-                                style: TextStyle(
-                                  fontSize: 16,
-                                  color: Colors.blue.shade700,
-                                  fontWeight: FontWeight.bold,
-                                ),
-                              ),
-                            ],
-                          ),
-                        );
-                      },
-                    ),
-                  ),
-                ],
+              const SizedBox(height: 8),
+              Text(
+                score >= widget.limit / 2 ? "Good Job!" : "Try Again",
+                style: const TextStyle(color: Colors.white70),
               ),
-            );
-          },
+              const SizedBox(height: 20),
+              Expanded(
+                child: ListView.builder(
+                  itemCount: questions.length,
+                  itemBuilder: (_, i) {
+                    final q = questions[i];
+                    final selected = userAnswers[q.id];
+                    final isCorrect = selected == q.termJp;
+
+                    return Container(
+                      margin: const EdgeInsets.only(bottom: 12),
+                      padding: const EdgeInsets.all(14),
+                      decoration: BoxDecoration(
+                        color: cardColor,
+                        borderRadius: BorderRadius.circular(16),
+                      ),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            q.termEn,
+                            style: const TextStyle(
+                              color: Colors.white,
+                              fontSize: 18,
+                              fontWeight: FontWeight.w600,
+                            ),
+                          ),
+                          const SizedBox(height: 8),
+                          Text(
+                            "あなたの回答: ${selected ?? "未回答"}",
+                            style: TextStyle(
+                              color: isCorrect ? accentColor : Colors.redAccent,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                          const SizedBox(height: 4),
+                          Text(
+                            "正解: ${q.termJp}",
+                            style: const TextStyle(color: Colors.white70),
+                          ),
+                        ],
+                      ),
+                    );
+                  },
+                ),
+              ),
+            ],
+          ),
         );
       },
     );
   }
 
-  // ======================================
-  // UI
-  // ======================================
+  /// ================================
+  /// UI
+  /// ================================
   @override
   Widget build(BuildContext context) {
     if (loading) {
@@ -299,65 +214,89 @@ class _PracticeEigo1ScreenState extends State<PracticeEigo1Screen> {
     }
 
     return Scaffold(
+      backgroundColor: bgColor,
       appBar: AppBar(
-        title: Text(widget.title),
+        backgroundColor: bgColor,
+        elevation: 0,
+        iconTheme: const IconThemeData(color: Colors.white),
+        title: Text(widget.title, style: const TextStyle(color: Colors.white)),
         actions: [
           IconButton(
-            icon: const Icon(Icons.refresh),
-            tooltip: "次の${widget.limit}問",
+            icon: const Icon(Icons.refresh, color: Colors.white),
             onPressed: generateTest,
           ),
         ],
       ),
-
       body: ListView.builder(
         itemCount: questions.length,
         itemBuilder: (_, i) {
           final q = questions[i];
 
-          return Card(
-            margin: const EdgeInsets.all(12),
-            child: Padding(
-              padding: const EdgeInsets.all(14),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    q.termEn,
-                    style: const TextStyle(
-                      fontSize: 20,
-                      fontWeight: FontWeight.bold,
+          return Container(
+            margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
+            padding: const EdgeInsets.all(16),
+            decoration: BoxDecoration(
+              color: cardColor,
+              borderRadius: BorderRadius.circular(16),
+            ),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  q.termEn,
+                  style: const TextStyle(
+                    color: Colors.white,
+                    fontSize: 18,
+                    fontWeight: FontWeight.w600,
+                  ),
+                ),
+                const SizedBox(height: 12),
+                DropdownButtonFormField<String>(
+                  dropdownColor: cardColor,
+                  value: userAnswers[q.id],
+                  hint: const Text(
+                    "日本語を選択",
+                    style: TextStyle(color: Colors.white70),
+                  ),
+                  iconEnabledColor: accentColor,
+                  style: const TextStyle(color: Colors.white),
+                  decoration: InputDecoration(
+                    filled: true,
+                    fillColor: bgColor,
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(12),
+                      borderSide: const BorderSide(color: Colors.white24),
                     ),
                   ),
-
-                  Align(
-                    alignment: Alignment.centerRight,
-                    child: DropdownButton<String>(
-                      hint: const Text("日本語を選択"),
-                      value: userAnswers[q.id],
-                      items: wordPool.map((jp) {
-                        return DropdownMenuItem(value: jp, child: Text(jp));
-                      }).toList(),
-                      onChanged: (val) {
-                        setState(() => userAnswers[q.id] = val!);
-                      },
-                    ),
-                  ),
-                ],
-              ),
+                  items: wordPool
+                      .map((jp) => DropdownMenuItem(value: jp, child: Text(jp)))
+                      .toList(),
+                  onChanged: (val) {
+                    setState(() => userAnswers[q.id] = val!);
+                  },
+                ),
+              ],
             ),
           );
         },
       ),
-
       bottomNavigationBar: Padding(
         padding: const EdgeInsets.all(16),
         child: ElevatedButton(
           onPressed: scoreTest,
           style: ElevatedButton.styleFrom(
-            minimumSize: const Size(double.infinity, 48),
+            backgroundColor: accentColor,
+            foregroundColor: Colors.white,
+            elevation: 0,
+            minimumSize: const Size(double.infinity, 52),
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(14),
+            ),
           ),
-          child: Text("採点する", style: const TextStyle(fontSize: 18)),
+          child: const Text(
+            "採点する",
+            style: TextStyle(fontSize: 18, fontWeight: FontWeight.w600),
+          ),
         ),
       ),
     );

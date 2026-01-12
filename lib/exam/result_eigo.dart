@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+/// 貿易英語 Result Screen（ChatGPT風UI・スマホ最適）
 class ResultScreenEigo extends StatelessWidget {
   final List<Map<String, dynamic>> answers;
   final double totalScore;
@@ -14,175 +15,207 @@ class ResultScreenEigo extends StatelessWidget {
     required this.sectionScores,
   });
 
+  // 🎨 ChatGPT風カラー
+  static const bgColor = Color(0xFF0F0F0F);
+  static const cardColor = Color(0xFF1E1E1E);
+  static const accentColor = Color(0xFF10A37F);
+  static const correctColor = Color(0xFF2ECC71);
+  static const wrongColor = Color(0xFFE74C3C);
+
   @override
   Widget build(BuildContext context) {
-    const double maxScore = 50.0; // 英語は50点満点
-    final double percent = (totalScore / maxScore) * 100;
+    const double maxScore = 50.0;
+    final double percent = (totalScore / maxScore).clamp(0, 1);
 
     return Scaffold(
+      backgroundColor: bgColor,
       appBar: AppBar(
-        title: const Text("貿易英語 結果"),
-        backgroundColor: Colors.lightBlue[100],
+        backgroundColor: bgColor,
+        elevation: 0,
         centerTitle: true,
+        title: const Text(
+          "English Test Result",
+          style: TextStyle(color: Colors.white),
+        ),
+        iconTheme: const IconThemeData(color: Colors.white),
       ),
       body: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
+        padding: const EdgeInsets.all(16),
+        child: ListView(
           children: [
-            // ============================
-            // 🔵 総合スコア
-            // ============================
-            Center(
-              child: Column(
-                children: [
-                  Text(
-                    "総合スコア：${totalScore.toStringAsFixed(1)} / 50点",
-                    style: const TextStyle(
-                      fontSize: 22,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                  const SizedBox(height: 8),
-                  Text(
-                    "正答率：${percent.toStringAsFixed(1)}%",
-                    style: const TextStyle(fontSize: 16),
-                  ),
-                  const SizedBox(height: 12),
-                  LinearProgressIndicator(
-                    value: percent / 100,
-                    minHeight: 8,
-                    color: Colors.lightBlue,
-                    backgroundColor: Colors.grey[300],
-                  ),
-                ],
-              ),
-            ),
-
+            _summaryCard(percent),
             const SizedBox(height: 24),
 
-            // ============================
-            // 🔵 大問別スコア
-            // ============================
             const Text(
-              "【大問別スコア】",
+              "SECTION SCORES",
               style: TextStyle(
+                color: Colors.white70,
                 fontWeight: FontWeight.bold,
-                fontSize: 18,
-                color: Colors.blueGrey,
+                letterSpacing: 1.2,
               ),
             ),
-            const SizedBox(height: 8),
+            const SizedBox(height: 12),
 
-            ...sectionScores.entries.map((entry) {
-              return Padding(
-                padding: const EdgeInsets.symmetric(vertical: 2),
-                child: Text(
-                  "${entry.key}：${entry.value.toStringAsFixed(1)}点",
-                  style: const TextStyle(fontSize: 16),
-                ),
-              );
-            }),
+            Wrap(
+              spacing: 10,
+              runSpacing: 10,
+              children: sectionScores.entries
+                  .map((e) => _chip("${e.key}  ${e.value.toStringAsFixed(1)}点"))
+                  .toList(),
+            ),
 
-            const Divider(thickness: 1, height: 32),
+            const SizedBox(height: 28),
 
-            // ============================
-            // 🔵 詳細結果
-            // ============================
             const Text(
-              "【詳細結果】",
+              "DETAIL RESULTS",
               style: TextStyle(
+                color: Colors.white70,
                 fontWeight: FontWeight.bold,
-                fontSize: 18,
-                color: Colors.blueGrey,
+                letterSpacing: 1.2,
               ),
             ),
-            const SizedBox(height: 8),
+            const SizedBox(height: 12),
 
-            Expanded(
-              child: ListView.builder(
-                itemCount: answers.length,
-                itemBuilder: (context, index) {
-                  final ans = answers[index];
-
-                  return Card(
-                    elevation: 2,
-                    margin: const EdgeInsets.symmetric(vertical: 6),
-                    child: Padding(
-                      padding: const EdgeInsets.all(12.0),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          // 英文
-                          Text(
-                            "Q${index + 1}. ${ans["question"] ?? ""}",
-                            style: const TextStyle(
-                              fontWeight: FontWeight.bold,
-                              fontSize: 15,
-                            ),
-                          ),
-
-                          const SizedBox(height: 6),
-
-                          if (ans["sentence"] != null)
-                            Text(
-                              ans["sentence"],
-                              style: const TextStyle(fontSize: 14),
-                            ),
-
-                          const SizedBox(height: 8),
-
-                          Text(
-                            "あなたの答え：${ans["selected"] ?? "-"}",
-                            style: const TextStyle(fontSize: 14),
-                          ),
-                          Text(
-                            "正解：${ans["correct"] ?? "-"}",
-                            style: const TextStyle(fontSize: 14),
-                          ),
-
-                          Text(
-                            "得点：${ans["points"].toStringAsFixed(1)}点",
-                            style: const TextStyle(fontSize: 14),
-                          ),
-
-                          const SizedBox(height: 6),
-
-                          if (ans["explanation"] != null &&
-                              ans["explanation"].toString().isNotEmpty)
-                            Container(
-                              width: double.infinity,
-                              padding: const EdgeInsets.all(8),
-                              decoration: BoxDecoration(
-                                color: Colors.blueGrey[50],
-                                borderRadius: BorderRadius.circular(8),
-                              ),
-                              child: Text(
-                                "解説：${ans["explanation"]}",
-                                style: const TextStyle(fontSize: 13),
-                              ),
-                            ),
-
-                          Align(
-                            alignment: Alignment.bottomRight,
-                            child: Icon(
-                              ans["isCorrect"]
-                                  ? Icons.check_circle
-                                  : Icons.cancel,
-                              color: ans["isCorrect"]
-                                  ? Colors.green
-                                  : Colors.redAccent,
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                  );
-                },
-              ),
-            ),
+            ...answers.asMap().entries.map((e) => _detailCard(e.key, e.value)),
           ],
         ),
+      ),
+    );
+  }
+
+  // =========================
+  // 総合スコア
+  // =========================
+  Widget _summaryCard(double percent) {
+    return Container(
+      padding: const EdgeInsets.all(20),
+      decoration: BoxDecoration(
+        color: cardColor,
+        borderRadius: BorderRadius.circular(20),
+      ),
+      child: Row(
+        children: [
+          Stack(
+            alignment: Alignment.center,
+            children: [
+              SizedBox(
+                width: 90,
+                height: 90,
+                child: CircularProgressIndicator(
+                  value: percent,
+                  strokeWidth: 8,
+                  backgroundColor: Colors.white12,
+                  valueColor: const AlwaysStoppedAnimation<Color>(accentColor),
+                ),
+              ),
+              Text(
+                "${(percent * 100).toStringAsFixed(0)}%",
+                style: const TextStyle(
+                  color: Colors.white,
+                  fontSize: 20,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+            ],
+          ),
+          const SizedBox(width: 20),
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                "${totalScore.toStringAsFixed(1)} / 50点",
+                style: const TextStyle(
+                  color: Colors.white,
+                  fontSize: 22,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+              Text(
+                "Total $totalQuestions questions",
+                style: const TextStyle(color: Colors.white70, fontSize: 14),
+              ),
+            ],
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _chip(String text) {
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 10),
+      decoration: BoxDecoration(
+        color: cardColor,
+        borderRadius: BorderRadius.circular(14),
+        border: Border.all(color: Colors.white24),
+      ),
+      child: Text(text, style: const TextStyle(color: Colors.white)),
+    );
+  }
+
+  // =========================
+  // 詳細結果
+  // =========================
+  Widget _detailCard(int index, Map<String, dynamic> ans) {
+    final bool isCorrect = ans["isCorrect"] == true;
+
+    return Container(
+      margin: const EdgeInsets.only(bottom: 12),
+      padding: const EdgeInsets.all(16),
+      decoration: BoxDecoration(
+        color: cardColor,
+        borderRadius: BorderRadius.circular(16),
+        border: Border.all(color: isCorrect ? correctColor : wrongColor),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            "Q${index + 1}. ${ans["question"]}",
+            style: const TextStyle(
+              color: Colors.white,
+              fontSize: 15,
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+          const SizedBox(height: 8),
+
+          Text(
+            "Your Answer : ${ans["selected"]}",
+            style: const TextStyle(color: Colors.white70, fontSize: 14),
+          ),
+          Text(
+            "Correct     : ${ans["correct"]}",
+            style: const TextStyle(color: Colors.white70, fontSize: 14),
+          ),
+
+          const SizedBox(height: 8),
+
+          Row(
+            children: [
+              Icon(
+                isCorrect ? Icons.check_circle : Icons.cancel,
+                color: isCorrect ? correctColor : wrongColor,
+                size: 20,
+              ),
+              const SizedBox(width: 6),
+              Text(
+                "${ans["points"]} 点",
+                style: const TextStyle(
+                  color: Colors.white,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+              if (ans["documentType"] != null) ...[
+                const SizedBox(width: 12),
+                Text(
+                  ans["documentType"],
+                  style: const TextStyle(color: Colors.white38, fontSize: 12),
+                ),
+              ],
+            ],
+          ),
+        ],
       ),
     );
   }

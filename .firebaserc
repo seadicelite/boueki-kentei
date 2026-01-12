@@ -1,5 +1,9 @@
 {
   "projects": {
-    "default": "trade-kentei"
-  }
+    "default": "trade-kentei",
+    "dev": "boueki-kentei",
+    "prod": "boueki-kentei"
+  },
+  "targets": {},
+  "etags": {}
 }

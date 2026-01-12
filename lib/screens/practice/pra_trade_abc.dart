@@ -20,11 +20,16 @@ class PracticeTradeABCScreen extends StatefulWidget {
 class _PracticeTradeABCScreenState extends State<PracticeTradeABCScreen> {
   List<dynamic> questions = [];
   int current = 0;
-  String? selectedAnswer; // "A" / "B" / "C"
+  String? selectedAnswer; // A / B / C
   bool showExplanation = false;
   bool isLoading = true;
 
   final explanationKey = GlobalKey();
+
+  // 🎨 ChatGPT風カラー
+  static const bgColor = Color(0xFF0F0F0F);
+  static const cardColor = Color(0xFF1E1E1E);
+  static const accentColor = Color(0xFF10A37F);
 
   @override
   void initState() {
@@ -37,7 +42,7 @@ class _PracticeTradeABCScreenState extends State<PracticeTradeABCScreen> {
     final data = jsonDecode(jsonString);
 
     List<dynamic> list = List.from(data["questions"]);
-    list.shuffle(Random()); // 🔥 全問シャッフル
+    list.shuffle(Random());
 
     setState(() {
       questions = list;
@@ -45,7 +50,6 @@ class _PracticeTradeABCScreenState extends State<PracticeTradeABCScreen> {
     });
   }
 
-  // 🔥 押した瞬間に回答＋解説表示
   void onSelect(String key) {
     if (showExplanation) return;
 
@@ -54,141 +58,208 @@ class _PracticeTradeABCScreenState extends State<PracticeTradeABCScreen> {
       showExplanation = true;
     });
 
-    // 🔥 自動スクロール
     Future.delayed(const Duration(milliseconds: 250), () {
-      Scrollable.ensureVisible(
-        explanationKey.currentContext!,
-        duration: const Duration(milliseconds: 400),
-      );
-    });
-  }
-
-  void nextQuestion() {
-    setState(() {
-      current++;
-      selectedAnswer = null;
-      showExplanation = false;
+      if (explanationKey.currentContext != null) {
+        Scrollable.ensureVisible(
+          explanationKey.currentContext!,
+          duration: const Duration(milliseconds: 400),
+        );
+      }
     });
   }
 
   bool get isLast => current == questions.length - 1;
 
+  void nextQuestion() {
+    if (!isLast) {
+      setState(() {
+        current++;
+        selectedAnswer = null;
+        showExplanation = false;
+      });
+    } else {
+      showEndDialog();
+    }
+  }
+
+  void showEndDialog() {
+    showDialog(
+      context: context,
+      builder: (_) => AlertDialog(
+        backgroundColor: cardColor,
+        title: const Text("終了", style: TextStyle(color: Colors.white)),
+        content: const Text(
+          "すべての問題を解きました。",
+          style: TextStyle(color: Colors.white70),
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context),
+            child: const Text("閉じる"),
+          ),
+          TextButton(
+            onPressed: () {
+              Navigator.pop(context);
+              setState(() {
+                current = 0;
+                selectedAnswer = null;
+                showExplanation = false;
+              });
+            },
+            child: const Text("もう一度"),
+          ),
+        ],
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     if (isLoading) {
-      return const Scaffold(body: Center(child: CircularProgressIndicator()));
+      return const Scaffold(
+        backgroundColor: bgColor,
+        body: Center(child: CircularProgressIndicator(color: accentColor)),
+      );
     }
 
     final q = questions[current];
 
     return Scaffold(
-      appBar: AppBar(title: Text(widget.title)),
+      backgroundColor: bgColor,
+      appBar: AppBar(
+        title: Text(widget.title),
+        backgroundColor: bgColor,
+        foregroundColor: Colors.white,
+        elevation: 0,
+        iconTheme: IconThemeData(color: Colors.white),
+      ),
       body: ListView(
         padding: const EdgeInsets.all(16),
         children: [
-          // 🔵 問題文
-          Text(
-            "Q${current + 1}. ${q["sentence"]}",
-            style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+          // 📘 問題文
+          Card(
+            color: cardColor,
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(16),
+            ),
+            child: Padding(
+              padding: const EdgeInsets.all(16),
+              child: Text(
+                "Q${current + 1}. ${q["sentence"]}",
+                style: const TextStyle(
+                  fontSize: 20,
+                  fontWeight: FontWeight.bold,
+                  height: 1.5,
+                  color: Colors.white,
+                ),
+              ),
+            ),
           ),
 
-          const SizedBox(height: 20),
+          const SizedBox(height: 24),
 
-          // 🔵 A/B/C ボタン
-          _buildChoiceButton("A", q["optionA"]),
+          _choiceButton("A", q["optionA"], q["answer"]),
           const SizedBox(height: 12),
-          _buildChoiceButton("B", q["optionB"]),
+          _choiceButton("B", q["optionB"], q["answer"]),
           const SizedBox(height: 12),
-          _buildChoiceButton("C", q["optionC"]),
+          _choiceButton("C", q["optionC"], q["answer"]),
 
-          const SizedBox(height: 30),
+          const SizedBox(height: 32),
 
           if (showExplanation) _buildExplanation(q),
 
-          const SizedBox(height: 30),
+          const SizedBox(height: 32),
 
-          // 🔵 次へ
           if (showExplanation)
             ElevatedButton(
-              onPressed: isLast ? null : nextQuestion,
+              onPressed: nextQuestion,
               style: ElevatedButton.styleFrom(
-                backgroundColor: Colors.orange,
-                minimumSize: const Size(double.infinity, 48),
+                backgroundColor: accentColor,
+                minimumSize: const Size(double.infinity, 56),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(16),
+                ),
               ),
-              child: Text(isLast ? "終了" : "次の問題へ"),
+              child: Text(
+                isLast ? "練習を終了する" : "次の問題へ",
+                style: const TextStyle(
+                  fontSize: 18,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
             ),
         ],
       ),
     );
   }
 
-  // ---------------------------------------------------------
-  // 🔥 アニメ付き A/B/C ボタン（丸罰UIを完全コピー）
-  // ---------------------------------------------------------
-  Widget _buildChoiceButton(String key, String text) {
+  // ----------------------------
+  // 🎯 選択ボタン（ChatGPT風）
+  // ----------------------------
+  Widget _choiceButton(String key, String text, String correct) {
     final isSelected = selectedAnswer == key;
 
-    return AnimatedContainer(
-      duration: const Duration(milliseconds: 250),
-      curve: Curves.easeOut,
-      decoration: BoxDecoration(
-        color: isSelected ? Colors.blue.withOpacity(0.7) : Colors.grey[200],
-        borderRadius: BorderRadius.circular(12),
-        boxShadow: isSelected
-            ? [BoxShadow(color: Colors.blue.withOpacity(0.5), blurRadius: 12)]
-            : [],
-      ),
-      child: ElevatedButton(
-        onPressed: () => onSelect(key),
-        style: ElevatedButton.styleFrom(
-          backgroundColor: Colors.transparent,
-          shadowColor: Colors.transparent,
-          foregroundColor: Colors.black,
+    Color bg;
+    if (!showExplanation) {
+      bg = isSelected ? accentColor : cardColor;
+    } else if (key == correct) {
+      bg = Colors.green.shade700;
+    } else if (isSelected) {
+      bg = Colors.red.shade700;
+    } else {
+      bg = cardColor;
+    }
+
+    return GestureDetector(
+      onTap: () => onSelect(key),
+      child: AnimatedContainer(
+        duration: const Duration(milliseconds: 250),
+        padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 12),
+        decoration: BoxDecoration(
+          color: bg,
+          borderRadius: BorderRadius.circular(16),
         ),
-        child: Padding(
-          padding: const EdgeInsets.symmetric(vertical: 14),
-          child: Row(
-            children: [
-              Icon(
-                isSelected ? Icons.circle : Icons.circle_outlined,
-                color: isSelected ? Colors.white : Colors.grey,
+        child: Row(
+          children: [
+            Icon(
+              isSelected ? Icons.radio_button_checked : Icons.radio_button_off,
+              color: Colors.white70,
+            ),
+            const SizedBox(width: 12),
+            Expanded(
+              child: Text(
+                "$key. $text",
+                style: const TextStyle(fontSize: 16, color: Colors.white),
               ),
-              const SizedBox(width: 12),
-              Expanded(
-                child: Text(
-                  "$key. $text",
-                  style: const TextStyle(fontSize: 16),
-                ),
-              ),
-            ],
-          ),
+            ),
+          ],
         ),
       ),
     );
   }
 
-  // ---------------------------------------------------------
-  // 🔥 解説（丸罰UIと同じ）
-  // ---------------------------------------------------------
+  // ----------------------------
+  // 📖 解説エリア
+  // ----------------------------
   Widget _buildExplanation(Map<String, dynamic> q) {
-    final correct = q["answer"]; // "A" / "B" / "C"
+    final correct = q["answer"];
     final isCorrect = selectedAnswer == correct;
 
     return Container(
       key: explanationKey,
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
-        color: isCorrect ? Colors.green.shade50 : Colors.red.shade50,
-        borderRadius: BorderRadius.circular(12),
+        color: cardColor,
+        borderRadius: BorderRadius.circular(16),
+        border: Border.all(color: isCorrect ? Colors.green : Colors.red),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          // ✔ 正誤
           Row(
             children: [
               Icon(
-                isCorrect ? Icons.circle : Icons.close,
+                isCorrect ? Icons.check_circle : Icons.cancel,
                 color: isCorrect ? Colors.green : Colors.red,
                 size: 28,
               ),
@@ -203,29 +274,23 @@ class _PracticeTradeABCScreenState extends State<PracticeTradeABCScreen> {
               ),
             ],
           ),
-
           const SizedBox(height: 12),
-
-          // ✔ 解説タイトル + 正解表示
-          Row(
-            children: [
-              const Text(
-                "【解説】",
-                style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-              ),
-              const SizedBox(width: 8),
-              Text(
-                "（正解：$correct）",
-                style: const TextStyle(fontSize: 16, color: Colors.blue),
-              ),
-            ],
+          Text(
+            "【解説】（正解：$correct）",
+            style: const TextStyle(
+              fontSize: 16,
+              fontWeight: FontWeight.bold,
+              color: accentColor,
+            ),
           ),
-
-          const SizedBox(height: 6),
-
+          const SizedBox(height: 8),
           Text(
             q["explanation"],
-            style: const TextStyle(fontSize: 16, height: 1.6),
+            style: const TextStyle(
+              fontSize: 16,
+              height: 1.6,
+              color: Colors.white70,
+            ),
           ),
         ],
       ),

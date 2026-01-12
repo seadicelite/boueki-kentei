@@ -26,6 +26,11 @@ class _PracticeTradeBlank2ScreenState extends State<PracticeTradeBlank2Screen> {
   String? selected2;
   bool answered = false;
 
+  // 🎨 ChatGPT風カラー
+  static const bgColor = Color(0xFF0F0F0F);
+  static const cardColor = Color(0xFF1E1E1E);
+  static const accentColor = Color(0xFF10A37F);
+
   @override
   void initState() {
     super.initState();
@@ -49,22 +54,82 @@ class _PracticeTradeBlank2ScreenState extends State<PracticeTradeBlank2Screen> {
     return selected1 == q["answer1"] && selected2 == q["answer2"];
   }
 
+  bool get isLast => current == questions.length - 1;
+
+  void nextQuestion() {
+    if (!isLast) {
+      setState(() {
+        current++;
+        selected1 = null;
+        selected2 = null;
+        answered = false;
+      });
+    } else {
+      showEndDialog();
+    }
+  }
+
+  void showEndDialog() {
+    showDialog(
+      context: context,
+      builder: (_) => AlertDialog(
+        backgroundColor: cardColor,
+        title: const Text("終了", style: TextStyle(color: Colors.white)),
+        content: const Text(
+          "すべての問題を解きました。",
+          style: TextStyle(color: Colors.white70),
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context),
+            child: const Text("閉じる"),
+          ),
+          TextButton(
+            onPressed: () {
+              Navigator.pop(context);
+              setState(() {
+                current = 0;
+                selected1 = null;
+                selected2 = null;
+                answered = false;
+              });
+            },
+            child: const Text("もう一度"),
+          ),
+        ],
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     if (questions.isEmpty) {
-      return const Scaffold(body: Center(child: CircularProgressIndicator()));
+      return const Scaffold(
+        backgroundColor: bgColor,
+        body: Center(child: CircularProgressIndicator(color: accentColor)),
+      );
     }
 
     final q = questions[current];
 
     return Scaffold(
-      appBar: AppBar(title: Text(widget.title)),
+      backgroundColor: bgColor,
+      appBar: AppBar(
+        title: Text(widget.title),
+        backgroundColor: bgColor,
+        foregroundColor: Colors.white,
+        elevation: 0,
+      ),
       body: ListView(
         padding: const EdgeInsets.all(16),
         children: [
           Text(
             "Q${current + 1}",
-            style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+            style: const TextStyle(
+              fontSize: 20,
+              fontWeight: FontWeight.bold,
+              color: Colors.white,
+            ),
           ),
 
           const SizedBox(height: 16),
@@ -95,29 +160,70 @@ class _PracticeTradeBlank2ScreenState extends State<PracticeTradeBlank2Screen> {
             onPressed: (selected1 != null && selected2 != null && !answered)
                 ? () => setState(() => answered = true)
                 : null,
-            child: const Text("解答する"),
+            style: ElevatedButton.styleFrom(
+              backgroundColor: accentColor,
+              minimumSize: const Size(double.infinity, 52),
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(14),
+              ),
+            ),
+            child: const Text(
+              "解答する",
+              style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+            ),
           ),
 
-          const SizedBox(height: 24),
+          if (answered) ...[
+            const SizedBox(height: 24),
+            _buildExplanation(q),
+            const SizedBox(height: 24),
 
-          if (answered) _buildExplanation(q),
+            ElevatedButton(
+              onPressed: nextQuestion,
+              style: ElevatedButton.styleFrom(
+                backgroundColor: accentColor,
+                minimumSize: const Size(double.infinity, 52),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(14),
+                ),
+              ),
+              child: Text(
+                isLast ? "練習を終了する" : "次の問題へ",
+                style: const TextStyle(
+                  fontSize: 16,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+            ),
+          ],
         ],
       ),
     );
   }
 
   // ----------------------------
-  // 問題文（①②を強調）
+  // 問題文カード
   // ----------------------------
   Widget _buildSentence(Map q) {
-    return Text(
-      q["sentence"],
-      style: const TextStyle(fontSize: 18, height: 1.6),
+    return Card(
+      color: cardColor,
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(14)),
+      child: Padding(
+        padding: const EdgeInsets.all(16),
+        child: Text(
+          q["sentence"],
+          style: const TextStyle(
+            fontSize: 18,
+            height: 1.6,
+            color: Colors.white,
+          ),
+        ),
+      ),
     );
   }
 
   // ----------------------------
-  // ドロップダウン
+  // ドロップダウン（ダーク対応）
   // ----------------------------
   Widget _buildDropdown({
     required String label,
@@ -128,33 +234,54 @@ class _PracticeTradeBlank2ScreenState extends State<PracticeTradeBlank2Screen> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(label, style: const TextStyle(fontWeight: FontWeight.bold)),
+        Text(
+          label,
+          style: const TextStyle(
+            fontWeight: FontWeight.bold,
+            color: Colors.white70,
+          ),
+        ),
         const SizedBox(height: 6),
         DropdownButtonFormField<String>(
+          dropdownColor: cardColor,
           value: value,
           items: items
               .map<DropdownMenuItem<String>>(
-                (e) => DropdownMenuItem(value: e, child: Text(e)),
+                (e) => DropdownMenuItem(
+                  value: e,
+                  child: Text(e, style: const TextStyle(color: Colors.white)),
+                ),
               )
               .toList(),
           onChanged: answered ? null : onChanged,
-          decoration: const InputDecoration(border: OutlineInputBorder()),
+          decoration: InputDecoration(
+            filled: true,
+            fillColor: cardColor,
+            enabledBorder: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(12),
+              borderSide: const BorderSide(color: Colors.white24),
+            ),
+            focusedBorder: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(12),
+              borderSide: const BorderSide(color: accentColor),
+            ),
+          ),
+          style: const TextStyle(color: Colors.white),
         ),
       ],
     );
   }
 
   // ----------------------------
-  // 解説
+  // 解説エリア
   // ----------------------------
   Widget _buildExplanation(Map q) {
     return Container(
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
-        color: isCorrect
-            ? Colors.green.withOpacity(0.1)
-            : Colors.red.withOpacity(0.1),
-        borderRadius: BorderRadius.circular(12),
+        color: cardColor,
+        borderRadius: BorderRadius.circular(14),
+        border: Border.all(color: isCorrect ? Colors.green : Colors.red),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -170,12 +297,16 @@ class _PracticeTradeBlank2ScreenState extends State<PracticeTradeBlank2Screen> {
           const SizedBox(height: 12),
           Text(
             "正解：① ${q["answer1"]} ／ ② ${q["answer2"]}",
-            style: const TextStyle(fontSize: 16),
+            style: const TextStyle(fontSize: 16, color: accentColor),
           ),
           const SizedBox(height: 8),
           Text(
             q["explanation"],
-            style: const TextStyle(fontSize: 16, height: 1.6),
+            style: const TextStyle(
+              fontSize: 16,
+              height: 1.6,
+              color: Colors.white70,
+            ),
           ),
         ],
       ),

@@ -27,6 +27,11 @@ class _PracticeTradeABScreenState extends State<PracticeTradeABScreen> {
 
   final explanationKey = GlobalKey();
 
+  // 🎨 ChatGPT風カラー定義
+  static const bgColor = Color(0xFF0F0F0F);
+  static const cardColor = Color(0xFF1E1E1E);
+  static const accentColor = Color(0xFF10A37F);
+
   @override
   void initState() {
     super.initState();
@@ -80,8 +85,12 @@ class _PracticeTradeABScreenState extends State<PracticeTradeABScreen> {
     showDialog(
       context: context,
       builder: (_) => AlertDialog(
-        title: const Text("終了"),
-        content: const Text("すべての問題を解きました。"),
+        backgroundColor: cardColor,
+        title: const Text("終了", style: TextStyle(color: Colors.white)),
+        content: const Text(
+          "すべての問題を解きました。",
+          style: TextStyle(color: Colors.white70),
+        ),
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(context),
@@ -108,25 +117,28 @@ class _PracticeTradeABScreenState extends State<PracticeTradeABScreen> {
   @override
   Widget build(BuildContext context) {
     if (isLoading) {
-      return const Scaffold(body: Center(child: CircularProgressIndicator()));
+      return const Scaffold(
+        backgroundColor: bgColor,
+        body: Center(child: CircularProgressIndicator(color: accentColor)),
+      );
     }
 
     final q = questions[current];
 
     return Scaffold(
-      backgroundColor: Colors.grey.shade100,
+      backgroundColor: bgColor,
       appBar: AppBar(
         title: Text(widget.title),
-        backgroundColor: Colors.blueGrey.shade900,
+        backgroundColor: bgColor,
+        foregroundColor: Colors.white,
+        elevation: 0,
       ),
       body: ListView(
         padding: const EdgeInsets.all(16),
         children: [
-          // --------------------
           // 📘 問題カード
-          // --------------------
           Card(
-            elevation: 4,
+            color: cardColor,
             shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(16),
             ),
@@ -138,6 +150,7 @@ class _PracticeTradeABScreenState extends State<PracticeTradeABScreen> {
                   fontSize: 20,
                   fontWeight: FontWeight.bold,
                   height: 1.5,
+                  color: Colors.white,
                 ),
               ),
             ),
@@ -145,12 +158,9 @@ class _PracticeTradeABScreenState extends State<PracticeTradeABScreen> {
 
           const SizedBox(height: 24),
 
-          // --------------------
-          // A / B ボタン
-          // --------------------
-          _choiceButton("A", q["optionA"]),
+          _choiceButton("A", q["optionA"], q["answer"]),
           const SizedBox(height: 12),
-          _choiceButton("B", q["optionB"]),
+          _choiceButton("B", q["optionB"], q["answer"]),
 
           const SizedBox(height: 32),
 
@@ -162,7 +172,7 @@ class _PracticeTradeABScreenState extends State<PracticeTradeABScreen> {
             ElevatedButton(
               onPressed: nextQuestion,
               style: ElevatedButton.styleFrom(
-                backgroundColor: Colors.orange,
+                backgroundColor: accentColor,
                 minimumSize: const Size(double.infinity, 56),
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(16),
@@ -181,44 +191,41 @@ class _PracticeTradeABScreenState extends State<PracticeTradeABScreen> {
     );
   }
 
-  // --------------------
-  // 🎯 選択ボタン（統一カラー）
-  // --------------------
-  Widget _choiceButton(String key, String text) {
+  // 🎯 選択ボタン
+  Widget _choiceButton(String key, String text, String correct) {
     final isSelected = selectedAnswer == key;
+
+    Color bg;
+    if (!showExplanation) {
+      bg = isSelected ? accentColor : cardColor;
+    } else if (key == correct) {
+      bg = Colors.green.shade700;
+    } else if (isSelected) {
+      bg = Colors.red.shade700;
+    } else {
+      bg = cardColor;
+    }
 
     return GestureDetector(
       onTap: () => onSelect(key),
       child: AnimatedContainer(
         duration: const Duration(milliseconds: 250),
-        curve: Curves.easeOut,
         padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 12),
         decoration: BoxDecoration(
-          color: isSelected ? Colors.blue : Colors.white,
+          color: bg,
           borderRadius: BorderRadius.circular(16),
-          boxShadow: [
-            BoxShadow(
-              color: isSelected ? Colors.blue.withOpacity(0.4) : Colors.black12,
-              blurRadius: 12,
-              offset: const Offset(0, 6),
-            ),
-          ],
         ),
         child: Row(
           children: [
             Icon(
               isSelected ? Icons.radio_button_checked : Icons.radio_button_off,
-              color: isSelected ? Colors.white : Colors.grey,
+              color: Colors.white70,
             ),
             const SizedBox(width: 12),
             Expanded(
               child: Text(
                 "$key. $text",
-                style: TextStyle(
-                  fontSize: 16,
-                  color: isSelected ? Colors.white : Colors.black,
-                  fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
-                ),
+                style: const TextStyle(fontSize: 16, color: Colors.white),
               ),
             ),
           ],
@@ -227,9 +234,7 @@ class _PracticeTradeABScreenState extends State<PracticeTradeABScreen> {
     );
   }
 
-  // --------------------
   // 📖 解説エリア
-  // --------------------
   Widget _buildExplanation(Map<String, dynamic> q) {
     final correct = q["answer"];
     final isCorrect = selectedAnswer == correct;
@@ -238,10 +243,9 @@ class _PracticeTradeABScreenState extends State<PracticeTradeABScreen> {
       key: explanationKey,
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
-        color: isCorrect
-            ? Colors.green.withOpacity(0.1)
-            : Colors.red.withOpacity(0.1),
+        color: cardColor,
         borderRadius: BorderRadius.circular(16),
+        border: Border.all(color: isCorrect ? Colors.green : Colors.red),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -251,7 +255,6 @@ class _PracticeTradeABScreenState extends State<PracticeTradeABScreen> {
               Icon(
                 isCorrect ? Icons.check_circle : Icons.cancel,
                 color: isCorrect ? Colors.green : Colors.red,
-                size: 28,
               ),
               const SizedBox(width: 8),
               Text(
@@ -264,28 +267,23 @@ class _PracticeTradeABScreenState extends State<PracticeTradeABScreen> {
               ),
             ],
           ),
-
-          const SizedBox(height: 16),
-
-          Row(
-            children: [
-              const Text(
-                "【解説】",
-                style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-              ),
-              const SizedBox(width: 8),
-              Text(
-                "（正解：$correct）",
-                style: const TextStyle(fontSize: 16, color: Colors.blue),
-              ),
-            ],
+          const SizedBox(height: 12),
+          Text(
+            "【解説】（正解：$correct）",
+            style: const TextStyle(
+              fontSize: 16,
+              fontWeight: FontWeight.bold,
+              color: accentColor,
+            ),
           ),
-
           const SizedBox(height: 8),
-
           Text(
             q["explanation"],
-            style: const TextStyle(fontSize: 16, height: 1.8),
+            style: const TextStyle(
+              fontSize: 16,
+              height: 1.8,
+              color: Colors.white70,
+            ),
           ),
         ],
       ),

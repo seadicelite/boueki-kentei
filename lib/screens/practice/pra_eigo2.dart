@@ -19,13 +19,17 @@ class EnglishThreeChoiceScreen extends StatefulWidget {
 }
 
 class _EnglishThreeChoiceScreenState extends State<EnglishThreeChoiceScreen> {
+  // 🎨 ChatGPT風カラー
+  static const bgColor = Color(0xFF0F0F0F);
+  static const cardColor = Color(0xFF1E1E1E);
+  static const accentColor = Color(0xFF10A37F);
+
   List<dynamic> questions = [];
   int current = 0;
-  String? selectedAnswer; // A/B/C
-  bool showExplanation = false;
-  bool isLoading = true;
 
-  final explanationKey = GlobalKey();
+  String? selectedAnswer; // "A" / "B" / "C"
+  bool isAnswered = false;
+  bool isLoading = true;
 
   @override
   void initState() {
@@ -33,12 +37,15 @@ class _EnglishThreeChoiceScreenState extends State<EnglishThreeChoiceScreen> {
     loadJson();
   }
 
+  // =====================================
+  // JSON読み込み（questions配列）
+  // =====================================
   Future<void> loadJson() async {
     final jsonString = await rootBundle.loadString(widget.fileName);
     final data = jsonDecode(jsonString);
 
-    List<dynamic> list = List.from(data["questions"]);
-    list.shuffle(Random()); // 🔥 全問シャッフル
+    final list = List<dynamic>.from(data["questions"]);
+    list.shuffle(Random());
 
     setState(() {
       questions = list;
@@ -46,28 +53,26 @@ class _EnglishThreeChoiceScreenState extends State<EnglishThreeChoiceScreen> {
     });
   }
 
+  // =====================================
+  // 回答
+  // =====================================
   void onSelect(String key) {
-    if (showExplanation) return;
+    if (isAnswered) return;
 
     setState(() {
       selectedAnswer = key;
-      showExplanation = true;
-    });
-
-    // 🔥 解説へ自動スクロール
-    Future.delayed(const Duration(milliseconds: 250), () {
-      Scrollable.ensureVisible(
-        explanationKey.currentContext!,
-        duration: const Duration(milliseconds: 400),
-      );
+      isAnswered = true;
     });
   }
 
+  // =====================================
+  // 次の問題
+  // =====================================
   void nextQuestion() {
     setState(() {
       current++;
       selectedAnswer = null;
-      showExplanation = false;
+      isAnswered = false;
     });
   }
 
@@ -76,154 +81,150 @@ class _EnglishThreeChoiceScreenState extends State<EnglishThreeChoiceScreen> {
   @override
   Widget build(BuildContext context) {
     if (isLoading) {
-      return const Scaffold(body: Center(child: CircularProgressIndicator()));
+      return const Scaffold(
+        backgroundColor: bgColor,
+        body: Center(child: CircularProgressIndicator()),
+      );
     }
 
     final q = questions[current];
+    final correct = q["answer"]; // "A" / "B" / "C"
 
     return Scaffold(
-      appBar: AppBar(title: Text(widget.title)),
+      backgroundColor: bgColor,
+      appBar: AppBar(
+        backgroundColor: bgColor,
+        elevation: 0,
+        iconTheme: IconThemeData(color: Colors.white),
+        title: Text(widget.title, style: const TextStyle(color: Colors.white)),
+      ),
       body: ListView(
         padding: const EdgeInsets.all(16),
         children: [
-          // 🔵 英文問題文
+          // 進捗表示
           Text(
-            "Q${current + 1}. ${q["sentence_en"]}",
-            style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+            "Question ${current + 1} / ${questions.length}",
+            style: const TextStyle(color: Colors.white54, fontSize: 14),
+          ),
+          const SizedBox(height: 10),
+
+          // 英文（問題文）
+          Text(
+            q["sentence_en"],
+            style: const TextStyle(
+              color: Colors.white,
+              fontSize: 20,
+              fontWeight: FontWeight.w600,
+              height: 1.4,
+            ),
           ),
 
-          const SizedBox(height: 20),
+          const SizedBox(height: 28),
 
-          // 🔵 3択
-          _buildChoice("A", q["optionA_en"]),
+          // 日本語3択
+          _buildChoice("A", q["optionA_jp"], correct),
           const SizedBox(height: 12),
-          _buildChoice("B", q["optionB_en"]),
+          _buildChoice("B", q["optionB_jp"], correct),
           const SizedBox(height: 12),
-          _buildChoice("C", q["optionC_en"]),
+          _buildChoice("C", q["optionC_jp"], correct),
 
-          const SizedBox(height: 30),
+          const SizedBox(height: 32),
 
-          if (showExplanation) _buildExplanation(q),
-
-          const SizedBox(height: 30),
-
-          if (showExplanation)
-            ElevatedButton(
-              onPressed: isLast ? null : nextQuestion,
-              style: ElevatedButton.styleFrom(
-                backgroundColor: Colors.orange,
-                minimumSize: const Size(double.infinity, 48),
+          // 次へボタン（回答後のみ）
+          AnimatedOpacity(
+            opacity: isAnswered ? 1 : 0,
+            duration: const Duration(milliseconds: 250),
+            child: IgnorePointer(
+              ignoring: !isAnswered,
+              child: ElevatedButton(
+                onPressed: isLast ? null : nextQuestion,
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: accentColor,
+                  foregroundColor: Colors.white,
+                  elevation: 0,
+                  minimumSize: const Size(double.infinity, 52),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(14),
+                  ),
+                ),
+                child: Text(
+                  isLast ? "Finish" : "Next",
+                  style: const TextStyle(
+                    fontSize: 18,
+                    fontWeight: FontWeight.w600,
+                  ),
+                ),
               ),
-              child: Text(isLast ? "Finish" : "Next Question"),
             ),
+          ),
         ],
       ),
     );
   }
 
-  // ---------------------------------------------------------
-  // 🔥 3択ボタン（丸罰UI）
-  // ---------------------------------------------------------
-  Widget _buildChoice(String key, String text) {
-    final isSelected = selectedAnswer == key;
+  // =====================================
+  // 選択肢UI（回答後ロック・色分け）
+  // =====================================
+  Widget _buildChoice(String key, String text, String correct) {
+    final isCorrect = isAnswered && key == correct;
+    final isWrong = isAnswered && key == selectedAnswer && key != correct;
+
+    Color bg;
+    Color border;
+    IconData icon;
+    Color iconColor;
+
+    if (isCorrect) {
+      bg = accentColor.withOpacity(0.2);
+      border = accentColor;
+      icon = Icons.check_circle;
+      iconColor = accentColor;
+    } else if (isWrong) {
+      bg = Colors.redAccent.withOpacity(0.2);
+      border = Colors.redAccent;
+      icon = Icons.cancel;
+      iconColor = Colors.redAccent;
+    } else if (isAnswered) {
+      bg = cardColor.withOpacity(0.5);
+      border = Colors.white12;
+      icon = Icons.circle_outlined;
+      iconColor = Colors.white24;
+    } else {
+      bg = cardColor;
+      border = Colors.white24;
+      icon = Icons.circle_outlined;
+      iconColor = Colors.white38;
+    }
 
     return AnimatedContainer(
-      duration: const Duration(milliseconds: 250),
-      curve: Curves.easeOut,
+      duration: const Duration(milliseconds: 200),
       decoration: BoxDecoration(
-        color: isSelected ? Colors.blue.withOpacity(0.7) : Colors.grey[200],
-        borderRadius: BorderRadius.circular(12),
-        boxShadow: isSelected
-            ? [BoxShadow(color: Colors.blue.withOpacity(0.4), blurRadius: 12)]
-            : [],
+        color: bg,
+        borderRadius: BorderRadius.circular(14),
+        border: Border.all(color: border, width: 1.2),
       ),
-      child: ElevatedButton(
-        onPressed: () => onSelect(key),
-        style: ElevatedButton.styleFrom(
-          backgroundColor: Colors.transparent,
-          shadowColor: Colors.transparent,
-        ),
+      child: InkWell(
+        borderRadius: BorderRadius.circular(14),
+        onTap: () => onSelect(key),
         child: Padding(
-          padding: const EdgeInsets.symmetric(vertical: 14),
+          padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 14),
           child: Row(
             children: [
-              Icon(
-                isSelected ? Icons.circle : Icons.circle_outlined,
-                color: isSelected ? Colors.white : Colors.grey,
-              ),
+              Icon(icon, color: iconColor),
               const SizedBox(width: 12),
               Expanded(
                 child: Text(
                   "$key. $text",
-                  style: const TextStyle(fontSize: 16, color: Colors.black),
+                  style: const TextStyle(
+                    color: Colors.white,
+                    fontSize: 16,
+                    height: 1.4,
+                  ),
                 ),
               ),
             ],
           ),
         ),
-      ),
-    );
-  }
-
-  // ---------------------------------------------------------
-  // 🔥 解説（丸罰UI）
-  // ---------------------------------------------------------
-  Widget _buildExplanation(Map<String, dynamic> q) {
-    final correct = q["answer"]; // "A" / "B" / "C"
-    final isCorrect = selectedAnswer == correct;
-
-    return Container(
-      key: explanationKey,
-      padding: const EdgeInsets.all(16),
-      decoration: BoxDecoration(
-        color: isCorrect ? Colors.green.shade50 : Colors.red.shade50,
-        borderRadius: BorderRadius.circular(12),
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          // 正誤
-          Row(
-            children: [
-              Icon(
-                isCorrect ? Icons.circle : Icons.close,
-                color: isCorrect ? Colors.green : Colors.red,
-                size: 28,
-              ),
-              const SizedBox(width: 8),
-              Text(
-                isCorrect ? "Correct!" : "Wrong...",
-                style: TextStyle(
-                  fontSize: 20,
-                  fontWeight: FontWeight.bold,
-                  color: isCorrect ? Colors.green : Colors.red,
-                ),
-              ),
-            ],
-          ),
-
-          const SizedBox(height: 12),
-
-          Row(
-            children: [
-              const Text(
-                "Explanation：",
-                style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-              ),
-              Text(
-                "(Correct Answer：$correct)",
-                style: const TextStyle(fontSize: 16, color: Colors.blue),
-              ),
-            ],
-          ),
-
-          const SizedBox(height: 6),
-
-          Text(
-            q["explanation_en"],
-            style: const TextStyle(fontSize: 16, height: 1.6),
-          ),
-        ],
       ),
     );
   }

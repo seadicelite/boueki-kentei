@@ -5,14 +5,12 @@ import 'package:flutter/material.dart';
 class MockTradeDai3WordbankScreen extends StatefulWidget {
   final String title;
   final String fileName;
-  final int limit; // 10問
   final Function(List<Map<String, dynamic>>, double) onComplete;
 
   const MockTradeDai3WordbankScreen({
     super.key,
     required this.title,
     required this.fileName,
-    required this.limit,
     required this.onComplete,
   });
 
@@ -24,13 +22,20 @@ class MockTradeDai3WordbankScreen extends StatefulWidget {
 class _MockTradeDai3WordbankScreenState
     extends State<MockTradeDai3WordbankScreen> {
   List<dynamic> questions = [];
-  List<String> wordbank = [];
-
   int current = 0;
-  String? selectedWord;
+
+  String? selected1;
+  String? selected2;
 
   bool isLoading = true;
   List<Map<String, dynamic>> answers = [];
+
+  // 🎨 ChatGPT風カラー
+  static const bgColor = Color(0xFF0F0F0F);
+  static const cardColor = Color(0xFF1E1E1E);
+  static const accentColor = Color(0xFF10A37F);
+
+  static const int questionCount = 5; // ★ 常に5問
 
   @override
   void initState() {
@@ -44,139 +49,191 @@ class _MockTradeDai3WordbankScreenState
     ).loadString(widget.fileName);
     final data = jsonDecode(jsonString);
 
-    List<dynamic> qs = List.from(data["questions"]);
-    List<String> wb = List<String>.from(data["wordbank"]);
-
-    qs.shuffle(Random());
-    wb.shuffle(Random());
+    final qs = List.from(data["questions"])..shuffle(Random());
 
     setState(() {
-      questions = qs.take(widget.limit).toList(); // 10問
-      wordbank = wb.take(20).toList(); // 語群20個
+      questions = qs.take(questionCount).toList();
       isLoading = false;
     });
   }
 
   void nextQuestion() {
     final q = questions[current];
-    final correct = selectedWord == q["answer"];
+    final bool correct = selected1 == q["answer1"] && selected2 == q["answer2"];
 
     answers.add({
-      "question": q["sentence"].replaceAll("___", "_____"),
-      "selected": selectedWord ?? "-",
-      "correct": q["answer"],
+      "question": q["sentence"],
+      "selected": "${selected1 ?? '-'} / ${selected2 ?? '-'}",
+      "correct": "${q["answer1"]} / ${q["answer2"]}",
       "isCorrect": correct,
-      "points": correct ? 1.0 : 0.0, // 1問1点 × 10問
-      "explanation": "",
+      "points": correct ? 3.0 : 0.0,
     });
 
     if (current < questions.length - 1) {
       setState(() {
         current++;
-        selectedWord = null;
+        selected1 = null;
+        selected2 = null;
       });
     } else {
-      double totalScore = answers.fold(0, (s, a) => s + a["points"]);
+      final totalScore = answers.fold<double>(0, (s, a) => s + a["points"]);
       widget.onComplete(answers, totalScore);
     }
   }
 
   @override
   Widget build(BuildContext context) {
-    if (isLoading) return const Center(child: CircularProgressIndicator());
+    if (isLoading) {
+      return const Scaffold(
+        backgroundColor: bgColor,
+        body: Center(child: CircularProgressIndicator()),
+      );
+    }
 
     final q = questions[current];
+    final List<String> choices = List<String>.from(q["choices"]);
 
-    return Padding(
-      padding: const EdgeInsets.all(16),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          // タイトル
-          Text(
-            widget.title,
-            style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-          ),
-          const SizedBox(height: 12),
+    return Scaffold(
+      backgroundColor: bgColor,
+      body: SafeArea(
+        child: Padding(
+          padding: const EdgeInsets.all(16),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                widget.title,
+                style: const TextStyle(
+                  color: Colors.white,
+                  fontSize: 18,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
 
-          // 問題文（穴埋め表示）
-          Text(
-            "Q${current + 1}. ${q["sentence"].replaceAll("___", "_____")}",
-            style: const TextStyle(fontSize: 17, fontWeight: FontWeight.w600),
-          ),
+              const SizedBox(height: 16),
 
-          const SizedBox(height: 12),
-
-          // 選んだ単語を表示
-          Container(
-            padding: const EdgeInsets.all(12),
-            decoration: BoxDecoration(
-              color: Colors.blue.shade50,
-              borderRadius: BorderRadius.circular(8),
-            ),
-            child: Text(
-              selectedWord == null ? "選択：なし" : "あなたの選択：$selectedWord",
-              style: const TextStyle(fontSize: 16),
-            ),
-          ),
-
-          const SizedBox(height: 20),
-
-          // 語群一覧（20個）
-          Expanded(
-            child: GridView.count(
-              crossAxisCount: 2,
-              mainAxisSpacing: 12,
-              crossAxisSpacing: 12,
-              children: wordbank.map((w) {
-                final bool isSelected = selectedWord == w;
-
-                return GestureDetector(
-                  onTap: () => setState(() => selectedWord = w),
-                  child: AnimatedContainer(
-                    duration: const Duration(milliseconds: 200),
-                    padding: const EdgeInsets.all(14),
-                    decoration: BoxDecoration(
-                      color: isSelected
-                          ? Colors.orange.shade100
-                          : Colors.grey.shade200,
-                      borderRadius: BorderRadius.circular(12),
-                      border: Border.all(
-                        color: isSelected
-                            ? Colors.orange
-                            : Colors.grey.shade400,
-                        width: 2,
-                      ),
-                    ),
-                    child: Center(
-                      child: Text(
-                        w,
-                        textAlign: TextAlign.center,
-                        style: const TextStyle(fontSize: 15),
-                      ),
-                    ),
+              // 問題文
+              Container(
+                padding: const EdgeInsets.all(16),
+                decoration: BoxDecoration(
+                  color: cardColor,
+                  borderRadius: BorderRadius.circular(16),
+                ),
+                child: Text(
+                  "Q${current + 1}. ${q["sentence"]}",
+                  style: const TextStyle(
+                    color: Colors.white,
+                    fontSize: 17,
+                    height: 1.6,
                   ),
-                );
-              }).toList(),
-            ),
-          ),
+                ),
+              ),
 
-          const SizedBox(height: 10),
+              const SizedBox(height: 24),
 
-          // 次へボタン
-          ElevatedButton(
-            onPressed: selectedWord == null ? null : nextQuestion,
-            style: ElevatedButton.styleFrom(
-              backgroundColor: Colors.orange,
-              minimumSize: const Size(double.infinity, 52),
-            ),
-            child: Text(
-              (current == questions.length - 1) ? "結果へ" : "次へ",
-              style: const TextStyle(fontSize: 18),
-            ),
+              // 空欄①
+              _buildDropdown(
+                label: "空欄①",
+                value: selected1,
+                items: choices,
+                onChanged: (v) {
+                  setState(() {
+                    selected1 = v;
+                    if (selected2 == v) selected2 = null;
+                  });
+                },
+              ),
+
+              const SizedBox(height: 16),
+
+              // 空欄②
+              _buildDropdown(
+                label: "空欄②",
+                value: selected2,
+                items: choices,
+                onChanged: (v) {
+                  setState(() {
+                    selected2 = v;
+                    if (selected1 == v) selected1 = null;
+                  });
+                },
+              ),
+
+              const Spacer(),
+
+              ElevatedButton(
+                onPressed: (selected1 == null || selected2 == null)
+                    ? null
+                    : nextQuestion,
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: accentColor,
+                  minimumSize: const Size(double.infinity, 52),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(14),
+                  ),
+                ),
+                child: Text(
+                  current == questions.length - 1 ? "結果へ" : "次へ",
+                  style: const TextStyle(
+                    fontSize: 18,
+                    fontWeight: FontWeight.w600,
+                  ),
+                ),
+              ),
+            ],
           ),
-        ],
+        ),
       ),
+    );
+  }
+
+  // ----------------------------
+  // Dropdown（ダーク対応）
+  // ----------------------------
+  Widget _buildDropdown({
+    required String label,
+    required String? value,
+    required List<String> items,
+    required ValueChanged<String?> onChanged,
+  }) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          label,
+          style: const TextStyle(
+            color: Colors.white70,
+            fontWeight: FontWeight.bold,
+          ),
+        ),
+        const SizedBox(height: 6),
+        DropdownButtonFormField<String>(
+          value: value,
+          dropdownColor: cardColor,
+          items: items
+              .map(
+                (e) => DropdownMenuItem(
+                  value: e,
+                  child: Text(e, style: const TextStyle(color: Colors.white)),
+                ),
+              )
+              .toList(),
+          onChanged: onChanged,
+          decoration: InputDecoration(
+            filled: true,
+            fillColor: cardColor,
+            enabledBorder: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(12),
+              borderSide: const BorderSide(color: Colors.white24),
+            ),
+            focusedBorder: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(12),
+              borderSide: const BorderSide(color: accentColor),
+            ),
+          ),
+          style: const TextStyle(color: Colors.white),
+        ),
+      ],
     );
   }
 }
